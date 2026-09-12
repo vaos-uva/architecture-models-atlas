@@ -17,3 +17,13 @@
 - [x] Update the source trail and downloadable data.
 - [x] Run type check/build and capture representative screenshots.
 - [ ] Save a final checkpoint and report the updated website.
+
+## Cross-model comparison and XMI walkthrough
+
+- [x] Confirm ISO 42010, C4, UML, MOF, and XMI terminology from authoritative sources.
+- [x] Design the side-by-side mapping table and artifact examples.
+- [x] Implement UML and MOF artifact examples.
+- [x] Implement the interactive XMI exchange walkthrough.
+- [x] Add source trail and downloadable data fields.
+- [x] Run type check/build and capture desktop/mobile screenshots.
+- [ ] Save a final checkpoint and report the updated atlas.
