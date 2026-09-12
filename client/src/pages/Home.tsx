@@ -76,6 +76,13 @@ const c4Levels = [
   { id: "code", level: "04", abstraction: "Code", diagram: "Code diagram", title: "See the implementation detail", purpose: "The lowest level, used when a code-level conversation needs classes, modules, source code, or other technical artifacts.", audience: "Developers working close to the code", artifact: "A focused implementation view—not a mandate to diagram everything", tone: "paper" },
 ] as const;
 
+const mofLayers = [
+  { id: "m3", level: "M3", label: "Meta-metamodel", title: "The language that defines languages", purpose: "The foundation for defining metamodels: the concepts, relationships, and rules used to describe modeling languages.", example: "MOF Core", audience: "Standards authors and tool builders", output: "A formal metamodeling vocabulary", tone: "navy" },
+  { id: "m2", level: "M2", label: "Metamodel", title: "The language of a domain", purpose: "A metamodel defines the elements and semantics of a modeling language, such as UML or another MOF-based language.", example: "UML metamodel", audience: "Language designers and model engineers", output: "A model language definition", tone: "blue" },
+  { id: "m1", level: "M1", label: "User model", title: "The model you create", purpose: "A concrete model conforms to a metamodel. It captures a system, domain, process, or other subject using the language defined above it.", example: "A UML class model", audience: "Architects, analysts, and developers", output: "An interoperable model artifact", tone: "rust" },
+  { id: "m0", level: "M0", label: "Instances / reality", title: "The things the model describes", purpose: "The modeled instances or real-world/runtime objects that populate the user model. The model is useful because it gives these instances structure and meaning.", example: "Objects at runtime", audience: "Teams using the modeled system", output: "A subject situated in the world", tone: "paper" },
+] as const;
+
 const chartData = [
   { edition: "1471 · 2000", concepts: 9, fill: "#9eb1c4" },
   { edition: "42010 · 2011", concepts: 12, fill: "#5c78a1" },
@@ -119,12 +126,14 @@ export default function Home() {
   const [activeEdition, setActiveEdition] = useState<Edition>("2022");
   const [selectedId, setSelectedId] = useState("ad");
   const [selectedC4, setSelectedC4] = useState("context");
+  const [selectedMof, setSelectedMof] = useState("m3");
   const [search, setSearch] = useState("");
   const [copied, setCopied] = useState(false);
   const [mobileNav, setMobileNav] = useState(false);
 
   const selected = concepts.find((concept) => concept.id === selectedId) ?? concepts[3];
   const selectedC4Level = c4Levels.find((level) => level.id === selectedC4) ?? c4Levels[0];
+  const selectedMofLayer = mofLayers.find((layer) => layer.id === selectedMof) ?? mofLayers[0];
   const filteredConcepts = useMemo(() => {
     const needle = search.trim().toLowerCase();
     if (!needle) return concepts;
@@ -152,7 +161,7 @@ export default function Home() {
   };
 
   const downloadAtlas = () => {
-    const blob = new Blob([JSON.stringify({ title: "Architecture Models Atlas", source: "ISO Architecture / IEEE 1471 + C4 Model", editions, concepts, c4Levels }, null, 2)], { type: "application/json" });
+    const blob = new Blob([JSON.stringify({ title: "Architecture Models Atlas", source: "ISO Architecture / IEEE 1471 + C4 Model + OMG MOF", editions, concepts, c4Levels, mofLayers }, null, 2)], { type: "application/json" });
     const href = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = href;
@@ -178,7 +187,7 @@ export default function Home() {
       </header>
 
       <div className={`mobile-nav ${mobileNav ? "open" : ""}`}>
-        {["top", "context", "core", "c4", "changes", "sources"].map((id) => <a key={id} href={`#${id}`} onClick={() => setMobileNav(false)}>{id === "top" ? "Overview" : id === "core" ? "Core model" : id === "c4" ? "C4 lens" : id === "changes" ? "Edition shifts" : id[0].toUpperCase() + id.slice(1)}</a>)}
+        {["top", "context", "core", "c4", "mof", "changes", "sources"].map((id) => <a key={id} href={`#${id}`} onClick={() => setMobileNav(false)}>{id === "top" ? "Overview" : id === "core" ? "Core model" : id === "c4" ? "C4 lens" : id === "mof" ? "MOF lens" : id === "changes" ? "Edition shifts" : id[0].toUpperCase() + id.slice(1)}</a>)}
       </div>
 
       <div className="atlas-layout" id="top">
@@ -189,8 +198,9 @@ export default function Home() {
             <a className="rail-link" href="#context"><span>02</span><b>Context</b></a>
             <a className="rail-link" href="#core"><span>03</span><b>Core model</b></a>
             <a className="rail-link" href="#c4"><span>04</span><b>C4 lens</b></a>
-            <a className="rail-link" href="#changes"><span>05</span><b>Edition shifts</b></a>
-            <a className="rail-link" href="#sources"><span>06</span><b>Sources</b></a>
+            <a className="rail-link" href="#mof"><span>05</span><b>MOF lens</b></a>
+            <a className="rail-link" href="#changes"><span>06</span><b>Edition shifts</b></a>
+            <a className="rail-link" href="#sources"><span>07</span><b>Sources</b></a>
           </nav>
           <div className="rail-foot"><span className="rail-dot" />Interactive research note<br /><small>Last framed · 2022 edition</small></div>
         </aside>
@@ -262,22 +272,36 @@ export default function Home() {
             </div>
           </section>
 
+          <section className="section-block mof-section" id="mof">
+            <div className="section-heading"><div className="section-marker"><span>05</span><span className="marker-line" /></div><div><div className="eyebrow">THE MOF LENS</div><h2>See the language behind the model.</h2><p className="section-intro">The OMG Meta-Object Facility adds a different kind of depth: not another architecture view, but the metamodeling infrastructure that lets languages, models, and tools interoperate.</p></div></div>
+            <div className="mof-board">
+              <div className="mof-board-top"><div><span className="eyebrow">FOUR-LAYER METAMODELING FRAME</span><h3>From language definition to lived instances.</h3></div><div className="mof-capabilities"><span><Layers3 size={15} /> define</span><span><Network size={15} /> transform</span><span><Download size={15} /> exchange</span></div></div>
+              <div className="mof-layout">
+                <div className="mof-stack" aria-label="Interactive MOF metamodeling layers">
+                  {mofLayers.map((layer) => <button key={layer.id} className={`mof-layer mof-${layer.tone} ${selectedMof === layer.id ? "selected" : ""}`} onClick={() => setSelectedMof(layer.id)}><span className="mof-layer-level">{layer.level}</span><span className="mof-layer-copy"><strong>{layer.label}</strong><small>{layer.example}</small></span><ChevronRight size={17} /></button>)}
+                </div>
+                <div className="mof-readout"><div className="mof-readout-top"><span className="mof-readout-level">{selectedMofLayer.level}</span><span className="category-tag">{selectedMofLayer.label}</span></div><h3>{selectedMofLayer.title}</h3><p>{selectedMofLayer.purpose}</p><div className="mof-meta"><div><span className="eyebrow">EXAMPLE</span><strong>{selectedMofLayer.example}</strong></div><div><span className="eyebrow">WHO IT HELPS</span><strong>{selectedMofLayer.audience}</strong></div><div><span className="eyebrow">OUTPUT</span><strong>{selectedMofLayer.output}</strong></div></div><div className="mof-bridge"><Link2 size={16} /><span><strong>Bridge to the atlas:</strong> ISO 42010 frames architecture description; C4 chooses a software-architecture zoom; MOF explains how a modeling language and its artifacts can be defined, exchanged, stored, transformed, and used for code generation.</span></div></div>
+              </div>
+              <div className="mof-flow"><span>MOF-based language</span><ChevronRight size={15} /><span>model artifact</span><ChevronRight size={15} /><span>XMI / repository</span><ChevronRight size={15} /><span>transformation / code</span></div>
+            </div>
+          </section>
+
           <section className="section-block explorer-section" id="explorer">
-            <div className="explorer-top"><div className="section-heading compact"><div className="section-marker"><span>04A</span><span className="marker-line" /></div><div><div className="eyebrow">CONCEPT EXPLORER</div><h2>Build your own glossary.</h2></div></div><div className="search-wrap"><Search size={17} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Find a concept…" aria-label="Find a concept" />{search && <button onClick={() => setSearch("")} aria-label="Clear search"><X size={15} /></button>}</div></div>
+            <div className="explorer-top"><div className="section-heading compact"><div className="section-marker"><span>05A</span><span className="marker-line" /></div><div><div className="eyebrow">CONCEPT EXPLORER</div><h2>Build your own glossary.</h2></div></div><div className="search-wrap"><Search size={17} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Find a concept…" aria-label="Find a concept" />{search && <button onClick={() => setSearch("")} aria-label="Clear search"><X size={15} /></button>}</div></div>
             <div className="filter-row"><span><Filter size={14} /> {filteredConcepts.length} concepts surfaced</span><span>Click any card for a closer read</span></div>
             <div className="concept-grid">{filteredConcepts.map((concept) => <button className={`concept-card ${selectedId === concept.id ? "selected" : ""}`} key={concept.id} onClick={() => setSelectedId(concept.id)}><div className="concept-card-top"><span className="category-tag">{concept.category}</span><span className="concept-edition">{concept.edition}</span></div><h3>{concept.name}</h3><p>{concept.short}</p><span className="concept-read">Inspect <ChevronRight size={14} /></span></button>)}</div>
           </section>
 
           <section className="section-block changes-section" id="changes">
-            <div className="section-heading"><div className="section-marker"><span>05</span><span className="marker-line" /></div><div><div className="eyebrow">EDITION SHIFTS</div><h2>What changed—and what stayed foundational.</h2><p className="section-intro">The vocabulary grows, but its organizing question remains stable: how does an AD help people express and reason about an architecture?</p></div></div>
+            <div className="section-heading"><div className="section-marker"><span>06</span><span className="marker-line" /></div><div><div className="eyebrow">EDITION SHIFTS</div><h2>What changed—and what stayed foundational.</h2><p className="section-intro">The vocabulary grows, but its organizing question remains stable: how does an AD help people express and reason about an architecture?</p></div></div>
             <div className="changes-grid"><div className="chart-card"><div className="card-heading"><div><span className="eyebrow">ATLAS INVENTORY</span><h3>Named elements surfaced</h3></div><span className="info-pill">derived count</span></div><div className="chart-wrap"><ResponsiveContainer width="100%" height={230}><BarChart data={chartData} margin={{ top: 12, right: 8, left: -18, bottom: 6 }}><CartesianGrid strokeDasharray="2 5" vertical={false} stroke="#d7d1c7" /><XAxis dataKey="edition" tick={{ fill: "#6a7180", fontSize: 10, fontFamily: "IBM Plex Mono" }} axisLine={false} tickLine={false} /><YAxis domain={[0, 16]} tick={{ fill: "#8a8c93", fontSize: 10, fontFamily: "IBM Plex Mono" }} axisLine={false} tickLine={false} /><Tooltip cursor={{ fill: "#f0ebe3" }} contentStyle={{ border: "1px solid #d6cfc4", borderRadius: 6, fontFamily: "IBM Plex Sans", fontSize: 12, boxShadow: "0 10px 30px rgba(41,48,60,.08)" }} /><Bar dataKey="concepts" radius={[4, 4, 0, 0]}>{chartData.map((entry) => <Cell key={entry.edition} fill={entry.fill} />)}</Bar></BarChart></ResponsiveContainer></div><p className="chart-footnote">A reading aid for this atlas, not a claim about the number of terms in the standards themselves.</p></div>
               <div className="delta-card"><div className="delta-card-head"><span className="eyebrow">2022 / NEW LENS</span><span className="delta-arrow"><ArrowUpRight size={16} /></span></div><h3>From a system to an entity.<br />From models to components.</h3><div className="delta-list"><div><span className="delta-num">01</span><p><strong>Entity of Interest</strong> broadens the subject beyond a System of Interest.</p></div><div><span className="delta-num">02</span><p><strong>Stakeholder Perspective</strong> groups concerns and organizes viewpoints.</p></div><div><span className="delta-num">03</span><p><strong>Architecture Aspect</strong> refines traceability between concerns and views.</p></div></div><button className="delta-link" onClick={() => { setActiveEdition("2022"); scrollToId("edition-switcher"); }}>Compare the editions <ChevronRight size={15} /></button></div></div>
             <div className="edition-switcher" id="edition-switcher"><div className="edition-switcher-head"><div><span className="eyebrow">LENS SELECTOR</span><h3>Read the same model through three frames.</h3></div><span className="selected-edition-label">{activeEdition} selected</span></div><div className="edition-tabs">{editions.map((edition) => <button key={edition.id} className={activeEdition === edition.id ? "active" : ""} onClick={() => setActiveEdition(edition.id)}><span>{edition.label}</span><strong>{edition.title}</strong><small>{edition.note}</small></button>)}</div><div className="edition-readout"><div className="readout-year">{activeEdition}</div><div><span className="eyebrow">THE SHORT READ</span><p>{activeEdition === "2022" ? "The current edition keeps the AD as the concrete expression of an architecture, while adding a wider subject, grouped stakeholder perspectives, and aspects that sharpen traceability." : activeEdition === "2011" ? "The first edition tightened the original framework around an Architecture Description, clarified concerns and viewpoints, and made the architecture-model relationship explicit." : "The origin model introduced the durable vocabulary: system, mission, environment, architecture, stakeholders, concerns, viewpoints, views, models, and rationale."}</p></div></div></div>
           </section>
 
           <section className="section-block sources-section" id="sources">
-            <div className="section-heading"><div className="section-marker"><span>06</span><span className="marker-line" /></div><div><div className="eyebrow">SOURCE TRAIL</div><h2>Keep the reference close.</h2></div></div>
-            <div className="sources-grid"><div className="source-intro"><BookOpen size={28} strokeWidth={1.5} /><p>This atlas is a visual interpretation of the public conceptual-model pages and the official ISO publication abstract. Follow the source trail when you need the exact normative language.</p><button className="text-button primary" onClick={downloadAtlas}><Download size={16} /> Download extracted data</button></div><div className="source-list"><a href="http://www.iso-architecture.org/ieee-1471/cm/" target="_blank" rel="noreferrer"><span className="source-number">01</span><span><strong>ISO Architecture</strong><small>A Conceptual Model of Architecture Description · current and historical context</small></span><ExternalLink size={15} /></a><a href="http://www.iso-architecture.org/42010/cm/cm-1471-2000.html" target="_blank" rel="noreferrer"><span className="source-number">02</span><span><strong>IEEE 1471-2000 framework</strong><small>Original conceptual framework and definitions</small></span><ExternalLink size={15} /></a><a href="https://www.iso.org/standard/74393.html" target="_blank" rel="noreferrer"><span className="source-number">03</span><span><strong>ISO official publication</strong><small>ISO/IEC/IEEE 42010:2022 scope, status, and abstract</small></span><ExternalLink size={15} /></a><a href="https://blog.visual-paradigm.com/unveiling-the-power-of-c4-model-simplifying-software-architecture-diagrams/" target="_blank" rel="noreferrer"><span className="source-number">04</span><span><strong>Visual Paradigm C4 article</strong><small>Four levels of abstraction and corresponding diagrams</small></span><ExternalLink size={15} /></a><a href="https://c4model.com/" target="_blank" rel="noreferrer"><span className="source-number">05</span><span><strong>Official C4 Model site</strong><small>Supporting diagrams, notation independence, and tooling guidance</small></span><ExternalLink size={15} /></a></div></div>
+            <div className="section-heading"><div className="section-marker"><span>07</span><span className="marker-line" /></div><div><div className="eyebrow">SOURCE TRAIL</div><h2>Keep the reference close.</h2></div></div>
+            <div className="sources-grid"><div className="source-intro"><BookOpen size={28} strokeWidth={1.5} /><p>This atlas is a visual interpretation of the public conceptual-model pages and the official ISO publication abstract. Follow the source trail when you need the exact normative language.</p><button className="text-button primary" onClick={downloadAtlas}><Download size={16} /> Download extracted data</button></div><div className="source-list"><a href="http://www.iso-architecture.org/ieee-1471/cm/" target="_blank" rel="noreferrer"><span className="source-number">01</span><span><strong>ISO Architecture</strong><small>A Conceptual Model of Architecture Description · current and historical context</small></span><ExternalLink size={15} /></a><a href="http://www.iso-architecture.org/42010/cm/cm-1471-2000.html" target="_blank" rel="noreferrer"><span className="source-number">02</span><span><strong>IEEE 1471-2000 framework</strong><small>Original conceptual framework and definitions</small></span><ExternalLink size={15} /></a><a href="https://www.iso.org/standard/74393.html" target="_blank" rel="noreferrer"><span className="source-number">03</span><span><strong>ISO official publication</strong><small>ISO/IEC/IEEE 42010:2022 scope, status, and abstract</small></span><ExternalLink size={15} /></a><a href="https://blog.visual-paradigm.com/unveiling-the-power-of-c4-model-simplifying-software-architecture-diagrams/" target="_blank" rel="noreferrer"><span className="source-number">04</span><span><strong>Visual Paradigm C4 article</strong><small>Four levels of abstraction and corresponding diagrams</small></span><ExternalLink size={15} /></a><a href="https://c4model.com/" target="_blank" rel="noreferrer"><span className="source-number">05</span><span><strong>Official C4 Model site</strong><small>Supporting diagrams, notation independence, and tooling guidance</small></span><ExternalLink size={15} /></a><a href="https://www.omg.org/mof/" target="_blank" rel="noreferrer"><span className="source-number">06</span><span><strong>OMG MetaObject Facility</strong><small>Model interchange, transformation, repositories, XMI, and MDA context</small></span><ExternalLink size={15} /></a><a href="https://www.omg.org/spec/MOF/2.5.1/PDF" target="_blank" rel="noreferrer"><span className="source-number">07</span><span><strong>MOF Core Specification 2.5.1</strong><small>Authoritative technical specification for MOF Core</small></span><ExternalLink size={15} /></a></div></div>
           </section>
 
           <footer className="footer"><span>ARCHITECTURE MODELS ATLAS</span><span>Research note · 29 AUG 2026</span><span>Built for inspection, comparison, and traceability.</span></footer>

@@ -7,3 +7,13 @@
 - [x] Update the source trail and research notes.
 - [x] Run type check/build and capture representative screenshots.
 - [ ] Save a final checkpoint and report the updated website.
+
+## MOF integration
+
+- [x] Open and read the provided OMG MOF source.
+- [x] Cross-check MOF layers and metamodeling terminology with an authoritative companion source.
+- [x] Decide how MOF should complement the ISO 42010 and C4 lenses.
+- [x] Implement the MOF research content and interactive visualization.
+- [x] Update the source trail and downloadable data.
+- [x] Run type check/build and capture representative screenshots.
+- [ ] Save a final checkpoint and report the updated website.
