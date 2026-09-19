@@ -27,3 +27,12 @@
 - [x] Add source trail and downloadable data fields.
 - [x] Run type check/build and capture desktop/mobile screenshots.
 - [ ] Save a final checkpoint and report the updated atlas.
+
+## Reusable research-atlas skill
+
+- [ ] Define the reusable research-to-atlas workflow and trigger conditions.
+- [ ] Read the skill creator workflow and output-pattern references.
+- [ ] Initialize a new skill package.
+- [ ] Author the SKILL.md with research, implementation, validation, and delivery guidance.
+- [ ] Remove unused scaffold resources and run skill validation.
+- [ ] Deliver the validated SKILL.md as an installable skill artifact.
