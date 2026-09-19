@@ -32,6 +32,10 @@ import {
   YAxis,
 } from "recharts";
 import { toast } from "sonner";
+import {
+  architectureSpecificationCount,
+  architectureSpecificationRegistry,
+} from "@/lib/architecture-specification-registry";
 
 type Edition = "2022" | "2011" | "2000";
 
@@ -260,7 +264,7 @@ export default function Home() {
   };
 
   const downloadAtlas = () => {
-    const blob = new Blob([JSON.stringify({ title: "Architecture Models Atlas", source: "ISO Architecture / IEEE 1471 + C4 Model + OMG MOF", editions, concepts, c4Levels, mofLayers, togafSteps, archiMateLayers, generalizedLevels, generalizedNodes, generalizedRelations, mappingRows, artifactExamples, xmiSteps }, null, 2)], { type: "application/json" });
+    const blob = new Blob([JSON.stringify({ title: "Architecture Models Atlas", source: "ISO Architecture / IEEE 1471 + C4 Model + OMG MOF", architectureSpecificationRegistry, editions, concepts, c4Levels, mofLayers, togafSteps, archiMateLayers, generalizedLevels, generalizedNodes, generalizedRelations, mappingRows, artifactExamples, xmiSteps }, null, 2)], { type: "application/json" });
     const href = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = href;
@@ -327,7 +331,7 @@ export default function Home() {
           </section>
 
           <section className="stat-strip" aria-label="Atlas at a glance">
-            <div><span className="stat-value">05</span><span className="stat-label">architecture lenses traced</span></div>
+            <div><span className="stat-value">{String(architectureSpecificationCount).padStart(2, "0")}</span><span className="stat-label">architecture specs registered</span></div>
             <div><span className="stat-value">20</span><span className="stat-label">named concepts in current atlas</span></div>
             <div><span className="stat-value">02</span><span className="stat-label">enterprise architecture additions</span></div>
             <div><span className="stat-value accent">∞</span><span className="stat-label">ways to assemble an AD</span></div>
