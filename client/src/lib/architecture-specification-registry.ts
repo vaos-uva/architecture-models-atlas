@@ -16,7 +16,7 @@ export type ArchitectureSpecificationKind =
 
 export type ArchitectureSpecificationStatus = "current" | "historical" | "atlas-synthesis";
 
-export type ArchitectureSpecificationComponent = {
+export type ArchitectureSpecification = {
   /** Stable machine-readable identifier. */
   id: string;
   /** Display name of the specification, framework, language, or synthesis model. */
@@ -45,14 +45,17 @@ export type ArchitectureSpecificationComponent = {
   tags: readonly string[];
 };
 
-export type ArchitectureSpecificationRegistry = ReadonlyArray<ArchitectureSpecificationComponent>;
+/** Backward-compatible name for callers that model a specification as a component. */
+export type ArchitectureSpecificationComponent = ArchitectureSpecification;
+
+export type ArchitectureSpecificationRegistry = ReadonlyArray<ArchitectureSpecification>;
 
 /**
  * Registry of every architecture specification currently represented in the atlas.
  * Keep one row per architecture lens/model; extend this list before adding a new
  * architecture source to the UI or download payload.
  */
-export const architectureSpecificationRegistry: ArchitectureSpecificationRegistry = [
+export const architectureSpecificationRegistry: ArchitectureSpecification[] = [
   {
     id: "iso-42010",
     name: "ISO/IEC/IEEE 42010",
@@ -165,10 +168,13 @@ export const architectureSpecificationRegistry: ArchitectureSpecificationRegistr
     ],
     tags: ["architecture", "components", "elements", "relationships", "views", "cross-framework"],
   },
-] as const;
+];
 
-export const architectureSpecificationById: Readonly<Record<string, ArchitectureSpecificationComponent>> = Object.fromEntries(
+/** Convenient domain name for consumers that want the registry as architectures. */
+export const architectures: ArchitectureSpecification[] = architectureSpecificationRegistry;
+
+export const architectureSpecificationById: Readonly<Record<string, ArchitectureSpecification>> = Object.fromEntries(
   architectureSpecificationRegistry.map((specification) => [specification.id, specification]),
-) as Record<string, ArchitectureSpecificationComponent>;
+) as Record<string, ArchitectureSpecification>;
 
 export const architectureSpecificationCount = architectureSpecificationRegistry.length;
