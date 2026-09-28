@@ -2,6 +2,7 @@
 import { useMemo, useState } from "react";
 import {
   ArrowDownRight,
+  ArrowUpDown,
   ArrowUpRight,
   BookOpen,
   Check,
@@ -170,6 +171,55 @@ const mappingRows = [
   { topic: "Interoperability", iso: "Correspondences and rules preserve traceability across AD elements.", c4: "Notation- and tooling-independent; exchange depends on the chosen tools.", mof: "XMI represents, links, validates, and identifies objects across files and tools.", togaf: "Configurable practice and governance align architecture work across organizations.", archimate: "The Open Group ArchiMate Model Exchange File Format supports compatible-tool exchange." },
 ] as const;
 
+type RegistrySortKey = "name" | "kind" | "version" | "primaryQuestion" | "abstraction";
+type RegistrySortDirection = "asc" | "desc";
+type MetamodelMapping = { targetId: string; relation: string; detail: string; tone: "direct" | "complementary" | "synthesis" };
+
+const frameworkMetamodelMappings: Record<string, MetamodelMapping[]> = {
+  "iso-42010": [
+    { targetId: "c4-model", relation: "frames", detail: "C4 can supply the software-architecture views selected by a viewpoint to answer stakeholder concerns.", tone: "complementary" },
+    { targetId: "omg-mof", relation: "governs the meaning of", detail: "MOF provides the metamodeling and interchange foundation behind model kinds and view components.", tone: "complementary" },
+    { targetId: "togaf-standard", relation: "structures the work around", detail: "TOGAF provides the method and governance context in which architecture descriptions are commissioned and evolved.", tone: "complementary" },
+    { targetId: "archimate-language", relation: "can use as a viewpoint language", detail: "ArchiMate supplies cross-domain elements and relationships for architecture views.", tone: "complementary" },
+    { targetId: "generalized-architecture-metamodel", relation: "is synthesized by", detail: "The atlas synthesis preserves the whole, parts, elements, relationships, views, and traceability spine.", tone: "synthesis" },
+  ],
+  "c4-model": [
+    { targetId: "iso-42010", relation: "populates views in", detail: "C4 levels are practical zoom choices that can become Architecture Views governed by viewpoints.", tone: "direct" },
+    { targetId: "omg-mof", relation: "may be formalized through", detail: "A C4 vocabulary can be represented as a modeling language when a tool requires a formal metamodel.", tone: "complementary" },
+    { targetId: "togaf-standard", relation: "supports delivery in", detail: "C4 diagrams make software architecture decisions visible during TOGAF delivery and governance cycles.", tone: "complementary" },
+    { targetId: "archimate-language", relation: "complements", detail: "C4 focuses software zoom; ArchiMate connects software with wider enterprise domains.", tone: "complementary" },
+    { targetId: "generalized-architecture-metamodel", relation: "maps to component levels", detail: "System, container, component, and code align naturally with whole-to-part decomposition.", tone: "synthesis" },
+  ],
+  "omg-mof": [
+    { targetId: "iso-42010", relation: "formalizes model kinds for", detail: "MOF can define the languages and model kinds used by architecture description views.", tone: "complementary" },
+    { targetId: "c4-model", relation: "can define a language for", detail: "C4 concepts can be captured as typed model elements when stronger conformance is needed.", tone: "complementary" },
+    { targetId: "togaf-standard", relation: "supports content metamodels in", detail: "MOF-style modeling helps make enterprise architecture content structures explicit and exchangeable.", tone: "complementary" },
+    { targetId: "archimate-language", relation: "provides infrastructure for", detail: "ArchiMate is a modeling language whose elements, relationships, and exchange artifacts benefit from metamodel discipline.", tone: "direct" },
+    { targetId: "generalized-architecture-metamodel", relation: "supplies the conformance layer for", detail: "The generalized vocabulary can be implemented as a metamodel with typed elements and relationships.", tone: "synthesis" },
+  ],
+  "togaf-standard": [
+    { targetId: "iso-42010", relation: "commissions and governs", detail: "TOGAF organizes the architecture work while ISO 42010 shapes the description that expresses the result.", tone: "complementary" },
+    { targetId: "c4-model", relation: "uses for software views", detail: "C4 provides lightweight software views within enterprise architecture initiatives and delivery packages.", tone: "complementary" },
+    { targetId: "omg-mof", relation: "can formalize content through", detail: "MOF provides a route to explicit content metamodels and interoperable architecture artifacts.", tone: "complementary" },
+    { targetId: "archimate-language", relation: "pairs with", detail: "TOGAF supplies method and governance; ArchiMate supplies a cross-domain language for the views.", tone: "direct" },
+    { targetId: "generalized-architecture-metamodel", relation: "provides lifecycle context for", detail: "The synthesis vocabulary can travel through capability, roadmap, governance, and change cycles.", tone: "synthesis" },
+  ],
+  "archimate-language": [
+    { targetId: "iso-42010", relation: "provides language for views in", detail: "ArchiMate elements and relationships can populate architecture views addressing stakeholder concerns.", tone: "complementary" },
+    { targetId: "c4-model", relation: "connects beyond", detail: "ArchiMate expands a software-architecture view into business, application, technology, and migration context.", tone: "complementary" },
+    { targetId: "omg-mof", relation: "is supported by", detail: "The ArchiMate metamodel and exchange format benefit from formal language and interchange concepts.", tone: "direct" },
+    { targetId: "togaf-standard", relation: "pairs with", detail: "ArchiMate gives TOGAF practitioners a common modeling language across domains and phases.", tone: "direct" },
+    { targetId: "generalized-architecture-metamodel", relation: "instantiates elements and relations in", detail: "ArchiMate demonstrates how a concrete language can realize the whole, part, element, and relationship spine.", tone: "synthesis" },
+  ],
+  "generalized-architecture-metamodel": [
+    { targetId: "iso-42010", relation: "inherits description framing from", detail: "The synthesis keeps architecture distinct from the views and artifacts used to describe it.", tone: "direct" },
+    { targetId: "c4-model", relation: "maps decomposition to", detail: "C4 supplies a concrete software zoom from architecture whole to component and code detail.", tone: "direct" },
+    { targetId: "omg-mof", relation: "can be realized as a", detail: "MOF supplies the formal metamodeling level for the generalized concepts and relationships.", tone: "direct" },
+    { targetId: "togaf-standard", relation: "travels through the lifecycle of", detail: "TOGAF supplies the enterprise method, governance, and change context around the vocabulary.", tone: "complementary" },
+    { targetId: "archimate-language", relation: "can be expressed with", detail: "ArchiMate supplies concrete cross-domain elements, relationships, viewpoints, and exchange artifacts.", tone: "direct" },
+  ],
+};
+
 const artifactExamples = [
   { id: "uml", label: "UML class model", kicker: "M1 / conforms to UML", title: "A small domain model", description: "An illustrative UML-style class model for an order flow. It is a user model at M1: useful to architects and developers, and conforming to a UML metamodel at M2.", note: "Illustrative artifact · not a normative UML excerpt", tone: "navy" },
   { id: "mof", label: "MOF metamodel", kicker: "M2 / defines a language", title: "The language behind the model", description: "An illustrative MOF-style metamodel fragment. It describes the types and relationships that a modeling language makes available to user models.", note: "Illustrative artifact · simplified for teaching", tone: "rust" },
@@ -231,6 +281,11 @@ export default function Home() {
   const [selectedGeneralizedLevel, setSelectedGeneralizedLevel] = useState<GeneralizedNode["level"]>("architecture");
   const [selectedGeneralizedId, setSelectedGeneralizedId] = useState("gm-architecture");
   const [selectedSpecification, setSelectedSpecification] = useState<ArchitectureSpecification | null>(null);
+  const [registrySearch, setRegistrySearch] = useState("");
+  const [registryType, setRegistryType] = useState("all");
+  const [registryVersion, setRegistryVersion] = useState("all");
+  const [registryTag, setRegistryTag] = useState("all");
+  const [registrySort, setRegistrySort] = useState<{ key: RegistrySortKey; direction: RegistrySortDirection }>({ key: "name", direction: "asc" });
   const [selectedArtifact, setSelectedArtifact] = useState("uml");
   const [xmiStep, setXmiStep] = useState("conform");
   const [search, setSearch] = useState("");
@@ -246,6 +301,23 @@ export default function Home() {
   const visibleGeneralizedNodes = generalizedNodes.filter((node) => node.level === selectedGeneralizedLevel);
   const selectedArtifactExample = artifactExamples.find((artifact) => artifact.id === selectedArtifact) ?? artifactExamples[0];
   const selectedXmiStep = xmiSteps.find((step) => step.id === xmiStep) ?? xmiSteps[0];
+  const registryTypes = useMemo(() => Array.from(new Set(architectureSpecificationRegistry.map((specification) => specification.kind))).sort(), []);
+  const registryVersions = useMemo(() => Array.from(new Set(architectureSpecificationRegistry.map((specification) => specification.version))).sort(), []);
+  const registryTags = useMemo(() => Array.from(new Set(architectureSpecificationRegistry.flatMap((specification) => specification.tags))).sort(), []);
+  const filteredRegistry = useMemo(() => {
+    const needle = registrySearch.trim().toLowerCase();
+    const rows = architectureSpecificationRegistry.filter((specification) => {
+      const searchable = `${specification.name} ${specification.acronym} ${specification.kind} ${specification.version} ${specification.primaryQuestion} ${specification.abstraction} ${specification.primaryArtifact} ${specification.interoperability} ${specification.tags.join(" ")}`.toLowerCase();
+      return (!needle || searchable.includes(needle)) && (registryType === "all" || specification.kind === registryType) && (registryVersion === "all" || specification.version === registryVersion) && (registryTag === "all" || specification.tags.includes(registryTag));
+    });
+    return [...rows].sort((a, b) => {
+      const left = registrySort.key === "name" ? a.name : a[registrySort.key];
+      const right = registrySort.key === "name" ? b.name : b[registrySort.key];
+      const comparison = String(left).localeCompare(String(right), undefined, { numeric: true, sensitivity: "base" });
+      return registrySort.direction === "asc" ? comparison : -comparison;
+    });
+  }, [registrySearch, registrySort, registryTag, registryType, registryVersion]);
+  const selectedMetamodelMappings = selectedSpecification ? frameworkMetamodelMappings[selectedSpecification.id] ?? [] : [];
   const filteredConcepts = useMemo(() => {
     const needle = search.trim().toLowerCase();
     if (!needle) return concepts;
@@ -441,8 +513,8 @@ export default function Home() {
           </section>
 
           <section className="section-block registry-section" id="registry">
-            <div className="section-heading"><div className="section-marker"><span>09</span><span className="marker-line" /></div><div><div className="eyebrow">ARCHITECTURE SPECIFICATION REGISTRY</div><h2>One row for every architecture lens.</h2><p className="section-intro">The registry is the atlas’s typed index of standards, models, methods, metamodeling infrastructure, modeling languages, and the generalized synthesis. Select a row to inspect its full metamodel-oriented profile.</p></div></div>
-            <div className="registry-table-card"><div className="registry-card-top"><div><span className="eyebrow">DYNAMIC DATA TABLE</span><h3>{architectureSpecificationCount} registered specifications</h3></div><span className="info-pill">click a row to explore</span></div><div className="registry-table-wrap"><table className="registry-table"><caption className="sr-only">Architecture specification registry</caption><thead><tr><th scope="col">Specification</th><th scope="col">Type</th><th scope="col">Version</th><th scope="col">Primary question</th><th scope="col">Metamodel focus</th><th scope="col"><span className="sr-only">Action</span></th></tr></thead><tbody>{architectureSpecificationRegistry.map((specification) => <tr key={specification.id} tabIndex={0} role="button" aria-label={`Explore ${specification.name} specification`} onClick={() => setSelectedSpecification(specification)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setSelectedSpecification(specification); } }}><td><div className="registry-name"><strong>{specification.name}</strong><span>{specification.acronym}</span></div></td><td><span className={`registry-kind registry-kind-${specification.kind}`}>{specification.kind.replaceAll("-", " ")}</span></td><td>{specification.version}</td><td className="registry-question">{specification.primaryQuestion}</td><td className="registry-abstraction">{specification.abstraction}</td><td><ChevronRight size={16} /></td></tr>)}</tbody></table></div></div>
+            <div className="section-heading"><div className="section-marker"><span>09</span><span className="marker-line" /></div><div><div className="eyebrow">ARCHITECTURE SPECIFICATION REGISTRY</div><h2>One row for every architecture lens.</h2><p className="section-intro">Search, filter, and sort the atlas’s typed index of standards, models, methods, metamodeling infrastructure, modeling languages, and the generalized synthesis. Select a row to inspect its full metamodel-oriented profile.</p></div></div>
+            <div className="registry-table-card"><div className="registry-card-top"><div><span className="eyebrow">DYNAMIC DATA TABLE</span><h3>{filteredRegistry.length} of {architectureSpecificationCount} specifications</h3></div><span className="info-pill">click a row to explore</span></div><div className="registry-controls"><label className="registry-search"><Search size={16} /><span className="sr-only">Search architecture registry</span><input value={registrySearch} onChange={(event) => setRegistrySearch(event.target.value)} placeholder="Search names, questions, artifacts, tags…" />{registrySearch && <button type="button" onClick={() => setRegistrySearch("")} aria-label="Clear registry search"><X size={14} /></button>}</label><label><span>Type</span><select value={registryType} onChange={(event) => setRegistryType(event.target.value)}><option value="all">All types</option>{registryTypes.map((type) => <option key={type} value={type}>{type.replaceAll("-", " ")}</option>)}</select></label><label><span>Version</span><select value={registryVersion} onChange={(event) => setRegistryVersion(event.target.value)}><option value="all">All versions</option>{registryVersions.map((version) => <option key={version} value={version}>{version}</option>)}</select></label><label><span>Tag</span><select value={registryTag} onChange={(event) => setRegistryTag(event.target.value)}><option value="all">All tags</option>{registryTags.map((tag) => <option key={tag} value={tag}>{tag}</option>)}</select></label><button type="button" className="registry-reset" onClick={() => { setRegistrySearch(""); setRegistryType("all"); setRegistryVersion("all"); setRegistryTag("all"); setRegistrySort({ key: "name", direction: "asc" }); }} disabled={!registrySearch && registryType === "all" && registryVersion === "all" && registryTag === "all" && registrySort.key === "name" && registrySort.direction === "asc"}><Filter size={14} /> Reset</button></div><div className="registry-filter-summary"><span><Filter size={14} /> {filteredRegistry.length} matching rows</span><span>Sort any column · press Enter on a row to inspect</span></div><div className="registry-table-wrap"><table className="registry-table"><caption className="sr-only">Architecture specification registry</caption><thead><tr><th scope="col"><button type="button" className="registry-sort" onClick={() => { const direction = registrySort.key === "name" && registrySort.direction === "asc" ? "desc" : "asc"; setRegistrySort({ key: "name", direction }); }} aria-label="Sort by specification name">Specification <ArrowUpDown size={13} /></button></th><th scope="col"><button type="button" className="registry-sort" onClick={() => { const direction = registrySort.key === "kind" && registrySort.direction === "asc" ? "desc" : "asc"; setRegistrySort({ key: "kind", direction }); }} aria-label="Sort by type">Type <ArrowUpDown size={13} /></button></th><th scope="col"><button type="button" className="registry-sort" onClick={() => { const direction = registrySort.key === "version" && registrySort.direction === "asc" ? "desc" : "asc"; setRegistrySort({ key: "version", direction }); }} aria-label="Sort by version">Version <ArrowUpDown size={13} /></button></th><th scope="col"><button type="button" className="registry-sort" onClick={() => { const direction = registrySort.key === "primaryQuestion" && registrySort.direction === "asc" ? "desc" : "asc"; setRegistrySort({ key: "primaryQuestion", direction }); }} aria-label="Sort by primary question">Primary question <ArrowUpDown size={13} /></button></th><th scope="col"><button type="button" className="registry-sort" onClick={() => { const direction = registrySort.key === "abstraction" && registrySort.direction === "asc" ? "desc" : "asc"; setRegistrySort({ key: "abstraction", direction }); }} aria-label="Sort by metamodel focus">Metamodel focus <ArrowUpDown size={13} /></button></th><th scope="col"><span className="sr-only">Action</span></th></tr></thead><tbody>{filteredRegistry.length ? filteredRegistry.map((specification) => <tr key={specification.id} tabIndex={0} role="button" aria-label={`Explore ${specification.name} specification`} onClick={() => setSelectedSpecification(specification)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setSelectedSpecification(specification); } }}><td><div className="registry-name"><strong>{specification.name}</strong><span>{specification.acronym}</span></div></td><td><span className={`registry-kind registry-kind-${specification.kind}`}>{specification.kind.replaceAll("-", " ")}</span></td><td>{specification.version}</td><td className="registry-question">{specification.primaryQuestion}</td><td className="registry-abstraction">{specification.abstraction}</td><td><ChevronRight size={16} /></td></tr>) : <tr className="registry-empty"><td colSpan={6}><strong>No registry rows match these filters.</strong><span>Try clearing a filter or searching for another framework, artifact, or tag.</span></td></tr>}</tbody></table></div></div>
           </section>
 
           <section className="section-block mapping-section" id="mapping">
@@ -485,6 +557,7 @@ export default function Home() {
                   <div className="registry-dialog-field"><span className="eyebrow">PRIMARY ARTIFACT</span><p>{selectedSpecification.primaryArtifact}</p></div>
                   <div className="registry-dialog-field registry-dialog-wide"><span className="eyebrow">INTEROPERABILITY / CONFORMANCE</span><p>{selectedSpecification.interoperability}</p></div>
                 </div>
+                <div className="registry-metamodel-map"><div className="registry-map-heading"><div><span className="eyebrow">FRAMEWORK-TO-FRAMEWORK METAMODEL MAP</span><h3>How this lens connects.</h3></div><span className="info-pill">{selectedMetamodelMappings.length} relationships</span></div><div className="registry-map-origin"><span className="registry-map-node-label">SELECTED FRAMEWORK</span><strong>{selectedSpecification.acronym}</strong><small>{selectedSpecification.kind.replaceAll("-", " ")}</small></div><div className="registry-map-links">{selectedMetamodelMappings.map((mapping) => { const target = architectureSpecificationRegistry.find((specification) => specification.id === mapping.targetId); return target ? <div className={`registry-map-link registry-map-link-${mapping.tone}`} key={mapping.targetId}><div className="registry-map-line"><span className="registry-map-arrow">→</span><span className="registry-map-relation">{mapping.relation}</span><strong>{target.acronym}</strong></div><p>{mapping.detail}</p></div> : null; })}</div></div>
                 <div className="registry-dialog-bottom"><div><span className="eyebrow">TAGS</span><div className="registry-tags">{selectedSpecification.tags.map((tag) => <span key={tag}>{tag}</span>)}</div></div><div><span className="eyebrow">SOURCE TRAIL</span><div className="registry-sources">{selectedSpecification.sources.map((source) => <a key={source} href={source} target="_blank" rel="noreferrer">{new URL(source).hostname.replace("www.", "")} <ExternalLink size={12} /></a>)}</div></div></div>
                 <div className="registry-dialog-footer"><span>Registry ID · {selectedSpecification.id}</span><button className="text-button primary" onClick={() => { setSelectedSpecification(null); scrollToId(selectedSpecification.atlasAnchor); }}>Open atlas lens <ArrowUpRight size={15} /></button></div>
               </>}
