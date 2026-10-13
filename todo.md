@@ -6,7 +6,7 @@
 - [x] Implement the C4 research content and interactive visualization.
 - [x] Update the source trail and research notes.
 - [x] Run type check/build and capture representative screenshots.
-- [ ] Save a final checkpoint and report the updated website.
+- [x] Save a final checkpoint and report the updated website.
 
 ## MOF integration
 
@@ -16,7 +16,7 @@
 - [x] Implement the MOF research content and interactive visualization.
 - [x] Update the source trail and downloadable data.
 - [x] Run type check/build and capture representative screenshots.
-- [ ] Save a final checkpoint and report the updated website.
+- [x] Save a final checkpoint and report the updated website.
 
 ## Cross-model comparison and XMI walkthrough
 
@@ -26,13 +26,13 @@
 - [x] Implement the interactive XMI exchange walkthrough.
 - [x] Add source trail and downloadable data fields.
 - [x] Run type check/build and capture desktop/mobile screenshots.
-- [ ] Save a final checkpoint and report the updated atlas.
+- [x] Save a final checkpoint and report the updated atlas.
 
 ## Reusable research-atlas skill
 
-- [ ] Define the reusable research-to-atlas workflow and trigger conditions.
-- [ ] Read the skill creator workflow and output-pattern references.
-- [ ] Initialize a new skill package.
-- [ ] Author the SKILL.md with research, implementation, validation, and delivery guidance.
-- [ ] Remove unused scaffold resources and run skill validation.
-- [ ] Deliver the validated SKILL.md as an installable skill artifact.
+- [x] Define the reusable research-to-atlas workflow and trigger conditions.
+- [x] Read the skill creator workflow and output-pattern references.
+- [x] Initialize a new skill package.
+- [x] Author the SKILL.md with research, implementation, validation, and delivery guidance.
+- [x] Remove unused scaffold resources and run skill validation.
+- [x] Deliver the validated SKILL.md as an installable skill artifact.
