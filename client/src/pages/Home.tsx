@@ -1,5 +1,5 @@
 // Design philosophy: print-room atlas — warm editorial surfaces, ink-blue structure, signal-rust deltas, and an asymmetric research-wall layout.
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import {
   ArrowDownRight,
   ArrowUpDown,
@@ -45,6 +45,30 @@ import {
   architectureSpecificationRegistry,
   type ArchitectureSpecification,
 } from "@/lib/architecture-specification-registry";
+import { getCatalogStats } from "@/lib/architecture-taxonomy";
+
+type StoredAtlasFile = {
+  id: number;
+  title: string;
+  description: string | null;
+  fileName: string;
+  url: string;
+  mimeType: string;
+  sizeBytes: number;
+  createdAt: string;
+};
+
+function encodeBytes(bytes: Uint8Array) {
+  let binary = "";
+  for (let index = 0; index < bytes.length; index += 1) binary += String.fromCharCode(bytes[index]);
+  return btoa(binary);
+}
+
+function formatFileSize(size: number) {
+  if (size < 1024) return `${size} B`;
+  if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`;
+  return `${(size / (1024 * 1024)).toFixed(1)} MB`;
+}
 
 type Edition = "2022" | "2011" | "2000";
 
@@ -291,6 +315,67 @@ export default function Home() {
   const [search, setSearch] = useState("");
   const [copied, setCopied] = useState(false);
   const [mobileNav, setMobileNav] = useState(false);
+  const [storageFiles, setStorageFiles] = useState<StoredAtlasFile[]>([]);
+  const [storageLoading, setStorageLoading] = useState(true);
+  const [storageBusy, setStorageBusy] = useState(false);
+  const [storageTitle, setStorageTitle] = useState("");
+  const [storageDescription, setStorageDescription] = useState("");
+  const [storageFile, setStorageFile] = useState<File | null>(null);
+
+  const taxonomyStats = useMemo(() => getCatalogStats(), []);
+
+  useEffect(() => {
+    fetch("/api/files", { credentials: "include" })
+      .then((response) => response.ok ? response.json() as Promise<StoredAtlasFile[]> : [])
+      .then((files) => setStorageFiles(files))
+      .catch(() => setStorageFiles([]))
+      .finally(() => setStorageLoading(false));
+  }, []);
+
+  const uploadArtifact = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!storageFile || !storageTitle.trim()) {
+      toast.info("Choose a file and add a title first");
+      return;
+    }
+    setStorageBusy(true);
+    try {
+      const bytes = new Uint8Array(await storageFile.arrayBuffer());
+      const response = await fetch("/api/files/upload", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fileName: storageFile.name, title: storageTitle.trim(), description: storageDescription.trim(), mimeType: storageFile.type || "application/octet-stream", dataBase64: encodeBytes(bytes) }),
+      });
+      const payload = await response.json() as StoredAtlasFile | { message?: string };
+      if (!response.ok) throw new Error("message" in payload ? payload.message : "Upload failed");
+      setStorageFiles((files) => [payload as StoredAtlasFile, ...files]);
+      setStorageTitle("");
+      setStorageDescription("");
+      setStorageFile(null);
+      const input = event.currentTarget.elements.namedItem("atlas-file") as HTMLInputElement | null;
+      if (input) input.value = "";
+      toast.success("Artifact saved to your private shelf");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Upload failed");
+    } finally {
+      setStorageBusy(false);
+    }
+  };
+
+  const removeArtifact = async (id: number) => {
+    setStorageBusy(true);
+    try {
+      const response = await fetch(`/api/files/${id}`, { method: "DELETE", credentials: "include" });
+      if (!response.ok) throw new Error("Could not remove artifact");
+      setStorageFiles((files) => files.filter((file) => file.id !== id));
+      toast.success("Artifact removed from the shelf");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Delete failed");
+    } finally {
+      setStorageBusy(false);
+    }
+  };
 
   const selected = concepts.find((concept) => concept.id === selectedId) ?? concepts[3];
   const selectedC4Level = c4Levels.find((level) => level.id === selectedC4) ?? c4Levels[0];
@@ -345,7 +430,7 @@ export default function Home() {
   };
 
   const downloadAtlas = () => {
-    const blob = new Blob([JSON.stringify({ title: "Architecture Models Atlas", source: "ISO Architecture / IEEE 1471 + C4 Model + OMG MOF", architectureSpecificationRegistry, editions, concepts, c4Levels, mofLayers, togafSteps, archiMateLayers, generalizedLevels, generalizedNodes, generalizedRelations, mappingRows, artifactExamples, xmiSteps }, null, 2)], { type: "application/json" });
+    const blob = new Blob([JSON.stringify({ title: "Architecture Models Atlas", source: "ISO Architecture / IEEE 1471 + C4 Model + OMG MOF", architectureSpecificationRegistry, taxonomyModule: "client/src/lib/architecture-taxonomy.ts", taxonomyStats, editions, concepts, c4Levels, mofLayers, togafSteps, archiMateLayers, generalizedLevels, generalizedNodes, generalizedRelations, mappingRows, artifactExamples, xmiSteps }, null, 2)], { type: "application/json" });
     const href = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = href;
@@ -371,7 +456,7 @@ export default function Home() {
       </header>
 
       <div className={`mobile-nav ${mobileNav ? "open" : ""}`}>
-        { ["top", "context", "core", "c4", "mof", "togaf", "archimate", "metamodel", "registry", "mapping", "changes", "sources"].map((id) => <a key={id} href={`#${id}`} onClick={() => setMobileNav(false)}>{id === "top" ? "Overview" : id === "core" ? "Core model" : id === "c4" ? "C4 lens" : id === "mof" ? "MOF lens" : id === "togaf" ? "TOGAF" : id === "archimate" ? "ArchiMate" : id === "metamodel" ? "Metamodel" : id === "registry" ? "Registry" : id === "mapping" ? "Compare" : id === "changes" ? "Edition shifts" : id[0].toUpperCase() + id.slice(1)}</a>)}
+        { ["top", "context", "core", "c4", "mof", "togaf", "archimate", "metamodel", "registry", "mapping", "changes", "sources", "storage"].map((id) => <a key={id} href={`#${id}`} onClick={() => setMobileNav(false)}>{id === "top" ? "Overview" : id === "core" ? "Core model" : id === "c4" ? "C4 lens" : id === "mof" ? "MOF lens" : id === "togaf" ? "TOGAF" : id === "archimate" ? "ArchiMate" : id === "metamodel" ? "Metamodel" : id === "registry" ? "Registry" : id === "mapping" ? "Compare" : id === "changes" ? "Edition shifts" : id === "storage" ? "File Storage" : id[0].toUpperCase() + id.slice(1)}</a>)}
       </div>
 
       <div className="atlas-layout" id="top">
@@ -390,6 +475,7 @@ export default function Home() {
             <a className="rail-link" href="#mapping"><span>10</span><b>Compare</b></a>
             <a className="rail-link" href="#changes"><span>11</span><b>Edition shifts</b></a>
             <a className="rail-link" href="#sources"><span>12</span><b>Sources</b></a>
+            <a className="rail-link" href="#storage"><span>13</span><b>File Storage</b></a>
           </nav>
           <div className="rail-foot"><span className="rail-dot" />Interactive research note<br /><small>Last framed · 2022 edition</small></div>
         </aside>
@@ -540,6 +626,28 @@ export default function Home() {
           <section className="section-block sources-section" id="sources">
             <div className="section-heading"><div className="section-marker"><span>12</span><span className="marker-line" /></div><div><div className="eyebrow">SOURCE TRAIL</div><h2>Keep the reference close.</h2></div></div>
             <div className="sources-grid"><div className="source-intro"><BookOpen size={28} strokeWidth={1.5} /><p>This atlas is a visual interpretation of the public conceptual-model pages and the official ISO publication abstract. Follow the source trail when you need the exact normative language.</p><button className="text-button primary" onClick={downloadAtlas}><Download size={16} /> Download extracted data</button></div><div className="source-list"><a href="http://www.iso-architecture.org/ieee-1471/cm/" target="_blank" rel="noreferrer"><span className="source-number">01</span><span><strong>ISO Architecture</strong><small>A Conceptual Model of Architecture Description · current and historical context</small></span><ExternalLink size={15} /></a><a href="http://www.iso-architecture.org/42010/cm/cm-1471-2000.html" target="_blank" rel="noreferrer"><span className="source-number">02</span><span><strong>IEEE 1471-2000 framework</strong><small>Original conceptual framework and definitions</small></span><ExternalLink size={15} /></a><a href="https://www.iso.org/standard/74393.html" target="_blank" rel="noreferrer"><span className="source-number">03</span><span><strong>ISO official publication</strong><small>ISO/IEC/IEEE 42010:2022 scope, status, and abstract</small></span><ExternalLink size={15} /></a><a href="https://blog.visual-paradigm.com/unveiling-the-power-of-c4-model-simplifying-software-architecture-diagrams/" target="_blank" rel="noreferrer"><span className="source-number">04</span><span><strong>Visual Paradigm C4 article</strong><small>Four levels of abstraction and corresponding diagrams</small></span><ExternalLink size={15} /></a><a href="https://c4model.com/" target="_blank" rel="noreferrer"><span className="source-number">05</span><span><strong>Official C4 Model site</strong><small>Supporting diagrams, notation independence, and tooling guidance</small></span><ExternalLink size={15} /></a><a href="https://www.omg.org/mof/" target="_blank" rel="noreferrer"><span className="source-number">06</span><span><strong>OMG MetaObject Facility</strong><small>Model interchange, transformation, repositories, XMI, and MDA context</small></span><ExternalLink size={15} /></a><a href="https://www.omg.org/spec/MOF/2.5.1/PDF" target="_blank" rel="noreferrer"><span className="source-number">07</span><span><strong>MOF Core Specification 2.5.1</strong><small>Authoritative technical specification for MOF Core</small></span><ExternalLink size={15} /></a><a href="https://www.opengroup.org/togaf" target="_blank" rel="noreferrer"><span className="source-number">08</span><span><strong>The Open Group TOGAF overview</strong><small>TOGAF Standard 10th Edition, ADM, Fundamental Content, and Series Guides</small></span><ExternalLink size={15} /></a><a href="https://publications.opengroup.org/togaf-library" target="_blank" rel="noreferrer"><span className="source-number">09</span><span><strong>TOGAF Library</strong><small>Official library organized by foundation, generic, industry, and organization-specific guidance</small></span><ExternalLink size={15} /></a><a href="https://www.opengroup.org/archimate-forum/archimate-overview" target="_blank" rel="noreferrer"><span className="source-number">10</span><span><strong>ArchiMate overview</strong><small>Open, independent Enterprise Architecture modeling language and exchange format context</small></span><ExternalLink size={15} /></a><a href="https://publications.opengroup.org/archimate-library/archimate-models/g201" target="_blank" rel="noreferrer"><span className="source-number">11</span><span><strong>ArchiMate G201 model</strong><small>Information Architecture reference model with an ArchiMate Exchange File Format model</small></span><ExternalLink size={15} /></a></div></div>
+          </section>
+
+          <section className="section-block storage-section" id="storage">
+            <div className="section-heading"><div className="section-marker"><span>13</span><span className="marker-line" /></div><div><div className="eyebrow">PERSONAL ATLAS STORAGE</div><h2>Keep architecture artifacts close.</h2></div></div>
+            <p className="storage-intro">Save taxonomy definitions, model files, decision records, and exchange artifacts to your private atlas shelf. File bytes live in built-in S3 storage; the database keeps only searchable metadata.</p>
+            <div className="storage-board">
+              <div className="storage-board-head"><div><span className="eyebrow">FILE STORAGE · 01</span><h3>Your private artifact shelf.</h3><small>Private to this browser session · 8 MB per file</small></div><span className="storage-lock">SESSION-SCOPED</span></div>
+              <div className="storage-grid">
+                <form className="storage-form" onSubmit={uploadArtifact}>
+                  <label htmlFor="atlas-title">Artifact title</label>
+                  <input id="atlas-title" value={storageTitle} onChange={(event) => setStorageTitle(event.target.value)} placeholder="Architecture decision record" maxLength={255} />
+                  <label htmlFor="atlas-description">Description</label>
+                  <textarea id="atlas-description" value={storageDescription} onChange={(event) => setStorageDescription(event.target.value)} placeholder="What does this artifact explain?" rows={3} maxLength={2000} />
+                  <label htmlFor="atlas-file">File</label>
+                  <input id="atlas-file" name="atlas-file" type="file" onChange={(event) => setStorageFile(event.target.files?.[0] ?? null)} />
+                  <button className="text-button primary storage-submit" type="submit" disabled={storageBusy}>{storageBusy ? "Saving…" : "Save artifact"} <ArrowUpRight size={15} /></button>
+                  <small className="storage-form-note">Accepted as-is for research artifacts; the server validates metadata and enforces the 8 MB limit.</small>
+                </form>
+                <div className="storage-summary"><span className="eyebrow">SUPPLIED TAXONOMY · PRESERVED</span><h3>Architecture Taxonomy</h3><p>The complete typed catalog is available to the atlas codebase and can be saved here as an artifact for handoff.</p><div className="storage-stats"><div><strong>{taxonomyStats.total}</strong><span>catalog records</span></div><div><strong>{taxonomyStats.unifiedEntities}</strong><span>unified entities</span></div><div><strong>{taxonomyStats.frameworks}</strong><span>frameworks</span></div></div><code>client/src/lib/architecture-taxonomy.ts</code></div>
+              </div>
+              <div className="storage-list"><div className="storage-list-head"><span className="eyebrow">SAVED ARTIFACTS</span><span>{storageLoading ? "Loading…" : `${storageFiles.length} saved`}</span></div>{!storageLoading && storageFiles.length === 0 ? <p className="storage-empty">No artifacts yet. Save a model file or a small decision record to start your shelf.</p> : storageFiles.map((file) => <div className="storage-file" key={file.id}><div className="storage-file-copy"><a href={file.url} target="_blank" rel="noreferrer"><strong>{file.title}</strong><ExternalLink size={13} /></a><span>{file.fileName} · {formatFileSize(file.sizeBytes)} · {new Date(file.createdAt).toLocaleDateString()}</span>{file.description && <small>{file.description}</small>}</div><button className="storage-remove" type="button" onClick={() => removeArtifact(file.id)} disabled={storageBusy}>Remove</button></div>)}</div>
+            </div>
           </section>
 
 
