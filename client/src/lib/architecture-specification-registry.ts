@@ -16,6 +16,18 @@ export type ArchitectureSpecificationKind =
 
 export type ArchitectureSpecificationStatus = "current" | "historical" | "atlas-synthesis";
 
+/**
+ * Extensible metadata for framework-specific facts that should not become
+ * mandatory columns in the normalized registry contract.
+ *
+ * Keep values JSON-safe so metadata can be searched, rendered, and exported
+ * without custom serialization rules. Arrays are useful for stage gates,
+ * layers, audiences, or related standards; scalar values work for labels,
+ * evidence levels, and governance scopes.
+ */
+export type ArchitectureSpecificationMetadataValue = string | number | boolean | readonly string[];
+export type ArchitectureSpecificationMetadata = Readonly<Record<string, ArchitectureSpecificationMetadataValue>>;
+
 export type ArchitectureSpecification = {
   /** Stable machine-readable identifier. */
   id: string;
@@ -43,6 +55,8 @@ export type ArchitectureSpecification = {
   sources: readonly string[];
   /** Cross-model tags used for filtering and future registry views. */
   tags: readonly string[];
+  /** Optional framework-specific metadata rendered as labeled detail fields. */
+  metadata?: ArchitectureSpecificationMetadata;
 };
 
 /** Backward-compatible name for callers that model a specification as a component. */
@@ -73,6 +87,7 @@ export const architectureSpecificationRegistry: ArchitectureSpecification[] = [
       "https://www.iso.org/standard/74393.html",
     ],
     tags: ["architecture-description", "stakeholders", "concerns", "viewpoints", "views", "traceability"],
+    metadata: { evidenceLevel: "normative", governanceScope: "architecture-description", stageGates: ["define", "frame", "describe", "trace"] },
   },
   {
     id: "c4-model",
@@ -91,6 +106,7 @@ export const architectureSpecificationRegistry: ArchitectureSpecification[] = [
       "https://blog.visual-paradigm.com/unveiling-the-power-of-c4-model-simplifying-software-architecture-diagrams/",
     ],
     tags: ["software-architecture", "system-context", "container", "component", "code", "diagramming"],
+    metadata: { evidenceLevel: "method-guidance", governanceScope: "software-architecture", stageGates: ["context", "container", "component", "code"] },
   },
   {
     id: "omg-mof",
@@ -109,6 +125,7 @@ export const architectureSpecificationRegistry: ArchitectureSpecification[] = [
       "https://www.omg.org/spec/MOF/2.5.1/PDF",
     ],
     tags: ["metamodeling", "mof", "xmi", "interchange", "transformation", "mda"],
+    metadata: { evidenceLevel: "normative", governanceScope: "metamodeling-and-interchange", stageGates: ["define", "conform", "exchange"] },
   },
   {
     id: "togaf-standard",
@@ -127,6 +144,7 @@ export const architectureSpecificationRegistry: ArchitectureSpecification[] = [
       "https://publications.opengroup.org/togaf-library",
     ],
     tags: ["enterprise-architecture", "adm", "governance", "roadmap", "migration", "capability"],
+    metadata: { evidenceLevel: "method-guidance", governanceScope: "enterprise-architecture", stageGates: ["vision", "govern", "change"] },
   },
   {
     id: "archimate-language",
@@ -146,6 +164,7 @@ export const architectureSpecificationRegistry: ArchitectureSpecification[] = [
       "https://publications.opengroup.org/archimate-library/archimate-models/g201",
     ],
     tags: ["enterprise-architecture", "modeling-language", "metamodel", "viewpoints", "layers", "exchange"],
+    metadata: { evidenceLevel: "language-specification", governanceScope: "enterprise-modeling", stageGates: ["model", "view", "exchange"] },
   },
   {
     id: "generalized-architecture-metamodel",
@@ -167,6 +186,7 @@ export const architectureSpecificationRegistry: ArchitectureSpecification[] = [
       "https://www.opengroup.org/archimate-forum/archimate-overview",
     ],
     tags: ["architecture", "components", "elements", "relationships", "views", "cross-framework"],
+    metadata: { evidenceLevel: "atlas-synthesis", governanceScope: "cross-framework", stageGates: ["research", "map", "validate"] },
   },
 ];
 

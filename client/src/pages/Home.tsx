@@ -70,6 +70,14 @@ function formatFileSize(size: number) {
   return `${(size / (1024 * 1024)).toFixed(1)} MB`;
 }
 
+function formatMetadataLabel(key: string) {
+  return key.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/[-_]/g, " ").replace(/^./, (value) => value.toUpperCase());
+}
+
+function metadataValueParts(value: string | number | boolean | readonly string[]) {
+  return Array.isArray(value) ? value.map(String) : [String(value)];
+}
+
 type Edition = "2022" | "2011" | "2000";
 
 type Concept = {
@@ -392,7 +400,8 @@ export default function Home() {
   const filteredRegistry = useMemo(() => {
     const needle = registrySearch.trim().toLowerCase();
     const rows = architectureSpecificationRegistry.filter((specification) => {
-      const searchable = `${specification.name} ${specification.acronym} ${specification.kind} ${specification.version} ${specification.primaryQuestion} ${specification.abstraction} ${specification.primaryArtifact} ${specification.interoperability} ${specification.tags.join(" ")}`.toLowerCase();
+      const metadataSearch = Object.entries(specification.metadata ?? {}).flatMap(([key, value]) => [key, ...metadataValueParts(value)]).join(" ");
+      const searchable = `${specification.name} ${specification.acronym} ${specification.kind} ${specification.version} ${specification.primaryQuestion} ${specification.abstraction} ${specification.primaryArtifact} ${specification.interoperability} ${specification.tags.join(" ")} ${metadataSearch}`.toLowerCase();
       return (!needle || searchable.includes(needle)) && (registryType === "all" || specification.kind === registryType) && (registryVersion === "all" || specification.version === registryVersion) && (registryTag === "all" || specification.tags.includes(registryTag));
     });
     return [...rows].sort((a, b) => {
@@ -665,6 +674,7 @@ export default function Home() {
                   <div className="registry-dialog-field"><span className="eyebrow">PRIMARY ARTIFACT</span><p>{selectedSpecification.primaryArtifact}</p></div>
                   <div className="registry-dialog-field registry-dialog-wide"><span className="eyebrow">INTEROPERABILITY / CONFORMANCE</span><p>{selectedSpecification.interoperability}</p></div>
                 </div>
+                {selectedSpecification.metadata && Object.keys(selectedSpecification.metadata).length > 0 && <div className="registry-custom-metadata"><div className="registry-map-heading"><div><span className="eyebrow">CUSTOM METADATA</span><h3>Framework-specific signals.</h3></div><span className="info-pill">{Object.keys(selectedSpecification.metadata).length} fields</span></div><div className="registry-metadata-grid">{Object.entries(selectedSpecification.metadata).map(([key, value]) => { const parts = metadataValueParts(value); const isList = Array.isArray(value); return <div className="registry-metadata-field" key={key}><span className="eyebrow">{formatMetadataLabel(key)}</span>{isList ? <div className="registry-metadata-chips">{parts.map((part) => <span key={part}>{part}</span>)}</div> : <p>{parts[0]}</p>}</div>; })}</div></div>}
                 <div className="registry-metamodel-map"><div className="registry-map-heading"><div><span className="eyebrow">FRAMEWORK-TO-FRAMEWORK METAMODEL MAP</span><h3>How this lens connects.</h3></div><span className="info-pill">{selectedMetamodelMappings.length} relationships</span></div><div className="registry-map-origin"><span className="registry-map-node-label">SELECTED FRAMEWORK</span><strong>{selectedSpecification.acronym}</strong><small>{selectedSpecification.kind.replaceAll("-", " ")}</small></div><div className="registry-map-links">{selectedMetamodelMappings.map((mapping) => { const target = architectureSpecificationRegistry.find((specification) => specification.id === mapping.targetId); return target ? <div className={`registry-map-link registry-map-link-${mapping.tone}`} key={mapping.targetId}><div className="registry-map-line"><span className="registry-map-arrow">→</span><span className="registry-map-relation">{mapping.relation}</span><strong>{target.acronym}</strong></div><p>{mapping.detail}</p></div> : null; })}</div></div>
                 <div className="registry-dialog-bottom"><div><span className="eyebrow">TAGS</span><div className="registry-tags">{selectedSpecification.tags.map((tag) => <span key={tag}>{tag}</span>)}</div></div><div><span className="eyebrow">SOURCE TRAIL</span><div className="registry-sources">{selectedSpecification.sources.map((source) => <a key={source} href={source} target="_blank" rel="noreferrer">{new URL(source).hostname.replace("www.", "")} <ExternalLink size={12} /></a>)}</div></div></div>
                 <div className="registry-dialog-footer"><span>Registry ID · {selectedSpecification.id}</span><button className="text-button primary" onClick={() => { setSelectedSpecification(null); scrollToId(selectedSpecification.atlasAnchor); }}>Open atlas lens <ArrowUpRight size={15} /></button></div>
