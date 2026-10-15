@@ -50,7 +50,7 @@ export type ArchitectureSpecification = {
   /** Interoperability, conformance, or relationship mechanism. */
   interoperability: string;
   /** Canonical atlas section anchor. */
-  atlasAnchor: "context" | "c4" | "mof" | "togaf" | "archimate" | "metamodel";
+  atlasAnchor: "context" | "c4" | "mof" | "togaf" | "archimate" | "dragon1" | "metamodel";
   /** Canonical source URLs associated with the registered row. */
   sources: readonly string[];
   /** Cross-model tags used for filtering and future registry views. */
@@ -165,6 +165,27 @@ export const architectureSpecificationRegistry: ArchitectureSpecification[] = [
     ],
     tags: ["enterprise-architecture", "modeling-language", "metamodel", "viewpoints", "layers", "exchange"],
     metadata: { evidenceLevel: "language-specification", governanceScope: "enterprise-modeling", stageGates: ["model", "view", "exchange"] },
+  },
+  {
+    id: "dragon1-ea-metamodel",
+    name: "Dragon1 Enterprise Architecture Meta Model",
+    acronym: "Dragon1",
+    kind: "modeling-language",
+    status: "current",
+    version: "Dragon1 Standard V2.1",
+    primaryQuestion: "How can enterprise architecture concepts, entities, and relationships form a coherent modeling language?",
+    abstraction: "Meta-meta-model, metamodel, model, and instance model across architecture, enterprise structure, strategy, transformation, stakeholders, and realization.",
+    primaryArtifact: "Enterprise Architecture Meta Model, reference models, views, visualizations, and exchangeable architecture models.",
+    interoperability: "Entity classes, attributes, relationships, states, symbols, modeling constraints, and extension rules provide a shared conceptual language.",
+    atlasAnchor: "dragon1",
+    sources: [
+      "https://www.dragon1.com/resources/dragon1/enterprise-architecture-meta-model",
+      "https://www.dragon1.com/modeling-languages/dragon1",
+      "https://www.dragon1.com/resources/dragon1/meta-models",
+      "https://www.dragon1.com/reference-models/enterprise-architecture-reference-model",
+    ],
+    tags: ["enterprise-architecture", "metamodel", "modeling-language", "concepts", "elements", "components", "reference-model", "visualization"],
+    metadata: { evidenceLevel: "open-method-specification", governanceScope: "enterprise-architecture-modeling", stageGates: ["define", "structure", "visualize", "realize"] },
   },
   {
     id: "generalized-architecture-metamodel",

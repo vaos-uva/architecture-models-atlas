@@ -16,6 +16,7 @@ describe("architecture specification registry metadata", () => {
       "omg-mof",
       "togaf-standard",
       "archimate-language",
+      "dragon1-ea-metamodel",
       "generalized-architecture-metamodel",
     ]);
   });
@@ -33,5 +34,6 @@ describe("architecture specification registry metadata", () => {
   it("exposes stage gates without turning them into fixed registry columns", () => {
     expect(architectureSpecificationRegistry.find((item) => item.id === "omg-mof")?.metadata?.stageGates).toEqual(["define", "conform", "exchange"]);
     expect(architectureSpecificationRegistry.find((item) => item.id === "generalized-architecture-metamodel")?.metadata?.evidenceLevel).toBe("atlas-synthesis");
+    expect(architectureSpecificationRegistry.find((item) => item.id === "dragon1-ea-metamodel")?.metadata?.stageGates).toEqual(["define", "structure", "visualize", "realize"]);
   });
 });
