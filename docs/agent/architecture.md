@@ -12,6 +12,15 @@ Browser
   -> database helpers (`server/db.ts`) and object storage (`server/storage.ts`)
 ```
 
+## Product identity boundaries
+
+- KNIGA is the product brand.
+- OZCO is the parent brand.
+- `client/index.html` owns title, description, author, theme, and canonical host metadata.
+- The existing brand slot, footer attribution, and existing CSS tokens own visible brand presentation.
+- Keep `https://kniga.agile-dev.ru` consistent in canonical metadata, release notes, and product-facing exports where host metadata is appropriate.
+- Branding updates should be additive and should not alter atlas section structure or research semantics.
+
 ## Frontend boundaries
 
 - `Home.tsx` owns the current single-page atlas composition and local interaction state.
@@ -48,5 +57,13 @@ Before changing a large file or data module:
 3. Create a guarded additive patch with assertions where possible.
 4. Inspect the diff and run tests.
 5. Confirm existing counts and key IDs remain present.
+6. Compare the result with the current roadmap gate before checkpointing.
 
 Never use a scaffold overwrite to replace `Home.tsx`, `index.css`, taxonomy data, migrations, or the registry.
+
+## Roadmap ownership
+
+- Product goal and milestone order: [`roadmap.md`](roadmap.md).
+- Repository execution recipes: [`actions.md`](actions.md).
+- Implementation boundaries: this guide.
+- Current project state and full Definition of Done: shared project file `architecture-atlas-state-goal-dod.md`.

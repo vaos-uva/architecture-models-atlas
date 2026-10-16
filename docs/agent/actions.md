@@ -22,13 +22,16 @@
 5. Ensure the detail dialog shows profile, metadata, tags, sources, mappings, and the atlas anchor.
 6. Update the registry test when adding a row or field.
 
-## C. Update the UI
+## C. Update the UI or branding
 
 1. Find the nearest section and reuse existing class names, tokens, and data-driven renderers.
 2. Prefer a typed array plus `.map()` over repeated markup.
 3. Give every action a visible result: selection, toast, modal, navigation, download, or share feedback.
 4. Check keyboard focus, accessible names, mobile overflow, and reduced motion.
 5. Do not replace `client/src/index.css` with a partial stylesheet.
+6. For KNIGA branding, update only the existing brand slot, footer attribution, and `client/index.html` metadata unless a redesign is explicitly requested.
+7. Preserve parent-brand and attribution values: KNIGA, OZCO, `kniga.agile-dev.ru`, author, master, color, version, date, Definitions-first, Traceable, copyright, and VA UVA.
+8. Verify wide and narrow screenshots after the change.
 
 ## D. Update backend or storage
 
@@ -40,18 +43,26 @@
 6. Add tests for success, validation failure, ownership denial, database failure, and storage failure.
 7. Run tests, type check, build, and a live API/UI smoke check.
 
-## E. Update documentation
+## E. Update documentation, skill, or roadmap
 
 1. Keep root `AGENTS.md` concise and operational.
-2. Put details in `docs/agent/`.
-3. Add the guide to `docs/INDEX.md`.
-4. Link to code entrypoints instead of copying large implementation details.
-5. Never include secrets, tokens, or private environment values.
+2. Put detailed procedures in `docs/agent/` and update `docs/INDEX.md`.
+3. Keep reusable domain workflow in `/home/ubuntu/skills/research-to-architecture-atlas/SKILL.md`, not in project-only docs.
+4. Before modifying a skill, read `/home/ubuntu/skills/skill-creator/SKILL.md`.
+5. Keep skill frontmatter valid, instructions imperative, and the body under 500 lines.
+6. Run `python /home/ubuntu/skills/skill-creator/scripts/quick_validate.py research-to-architecture-atlas` after skill edits.
+7. Never include secrets, tokens, or private environment values.
+8. Update `docs/agent/roadmap.md` when goal, milestone order, gates, host, or product identity changes.
 
-## F. Release/checkpoint
+## F. Release, checkpoint, commit, and push
 
-1. Review `git diff` and confirm no generated or secret files changed.
-2. Run all validation gates.
-3. Verify the changed UI in the live preview.
-4. Record limitations and assumptions.
-5. Save the WebDev checkpoint only after verification.
+1. Review `git status --short` and `git diff --stat`.
+2. Confirm only intended source/docs/skill changes are present; exclude secrets and generated/runtime output.
+3. Run `pnpm test`, `pnpm run check`, `pnpm run build`, and `git diff --check`.
+4. For UI changes, verify the changed interaction and wide/narrow preview.
+5. Validate modified skills with the official validator.
+6. Save a WebDev checkpoint after verification.
+7. Commit with a concise, descriptive message.
+8. Push the intended branch to the configured remote; prefer the explicitly requested remote such as `user_github` when available.
+9. Verify the remote head with `git ls-remote --heads <remote> <branch>` and report commit, branch, remote, and validation evidence.
+10. Do not force-push, rewrite history, or push a dirty/unvalidated tree unless the user explicitly requests it.
