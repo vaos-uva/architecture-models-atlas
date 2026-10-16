@@ -472,9 +472,9 @@ export default function Home() {
   return (
     <div className="atlas-shell">
       <header className="topbar">
-        <a href="#top" className="brand" aria-label="Architecture Models Atlas home">
+        <a href="#top" className="brand" aria-label="OZCO computation systems · Architecture Models Atlas home">
           <span className="brand-mark"><img src="/manus-storage/atlas-mark_d0d985a0.png" alt="" /></span>
-          <span className="brand-copy"><strong>ARCHITECTURE</strong><em>models atlas</em></span>
+          <span className="brand-copy"><strong className="brand-ozco">OZCO</strong><em className="brand-computation">computation systems</em></span>
         </a>
         <div className="topbar-meta"><span className="eyebrow">FIELD NOTE 01</span><span className="topbar-line" /><span>ISO 42010 · TOGAF · ArchiMate · Dragon1</span></div>
         <div className="topbar-actions">
@@ -715,7 +715,7 @@ export default function Home() {
               </>}
             </DialogContent>
           </Dialog>
-          <footer className="footer"><span>ARCHITECTURE MODELS ATLAS</span><span>Research note · 29 AUG 2026</span><span>Built for inspection, comparison, and traceability.</span></footer>
+          <footer className="footer"><span>ARCHITECTURE MODELS ATLAS · OZCO computation systems</span><span>Author: Usanov VA · Master: Usan VA · #16B8F3</span><span>v2.0 · March 2026 · Definitions-first · Traceable · agile-dev.ru · © 2026 Usan VA · VA UVA · OZCO</span></footer>
         </main>
       </div>
     </div>
