@@ -15,7 +15,7 @@
 
 ## B. Update the registry
 
-1. Read `client/src/lib/architecture-specification-registry.ts` and its tests.
+1. Read `client/src/components/architecture/definitions.ts`, `client/src/components/architecture/instances/architecture-specification-registry.ts`, and the colocated tests.
 2. Extend `ArchitectureSpecification` before adding custom fields.
 3. Preserve all existing rows and IDs.
 4. Ensure search includes metadata and tags; filters compose; sortable columns remain valid.

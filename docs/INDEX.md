@@ -15,8 +15,9 @@ Use this index after reading the repository [`AGENTS.md`](../AGENTS.md). It is i
 
 ## Entry points by task
 
-- **Add or compare a framework:** `client/src/lib/architecture-specification-registry.ts` → `client/src/pages/Home.tsx` → `client/src/index.css` → tests → source trail/export.
-- **Add taxonomy concepts:** `client/src/lib/architecture-taxonomy.ts` → taxonomy UI in `Home.tsx` → stable IDs and provenance tests.
+- **Add or compare a framework:** `client/src/components/architecture/definitions.ts` → `architecture/instances/architecture-specification-registry.ts` → KNIGA data/view → `Home.tsx` → tests → source trail/export.
+- **Add taxonomy concepts:** `client/src/components/architecture/models/architecture-taxonomy.ts` → KNIGA data/view → taxonomy UI in `Home.tsx` → stable IDs and provenance tests.
+- **Add a component:** decide OZCO-agnostic versus KNIGA product versus architecture-domain ownership before writing JSX; keep definitions, models, and instances in separate files.
 - **Modify registry interactions:** registry type/data → `Home.tsx` filters/sort/modal → registry tests → browser smoke test.
 - **Modify upload/storage:** `drizzle/schema.ts` → migration → `server/db.ts` → `server/storage.ts` / `server/index.ts` → tests → UI shelf.
 - **Modify layout/theme/branding:** `client/index.html` → existing brand JSX in `Home.tsx` → existing tokens in `index.css` → wide/narrow screenshots.

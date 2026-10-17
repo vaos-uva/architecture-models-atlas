@@ -7,7 +7,9 @@ Browser
   -> React app (`client/src/main.tsx`)
   -> App shell and route (`client/src/App.tsx`)
   -> Atlas page (`client/src/pages/Home.tsx`)
-  -> typed data modules (`client/src/lib/*`)
+  -> OZCO primitives (`client/src/components/ozco/abstract/*`)
+  -> KNIGA composition and contracts (`client/src/components/kniga/{data,structure,view,source}/*`)
+  -> architecture definitions/models/instances (`client/src/components/architecture/*`)
   -> Express API (`server/index.ts`)
   -> database helpers (`server/db.ts`) and object storage (`server/storage.ts`)
 ```
@@ -23,9 +25,12 @@ Browser
 
 ## Frontend boundaries
 
-- `Home.tsx` owns the current single-page atlas composition and local interaction state.
-- `architecture-specification-registry.ts` owns normalized framework profiles and typed custom metadata.
-- `architecture-taxonomy.ts` owns the preserved taxonomy catalog; do not prune it to simplify a UI.
+- `Home.tsx` owns the current single-page atlas composition and local interaction state; it must not become a data registry.
+- `components/ozco/abstract/` owns brand-agnostic contracts/primitives and cannot import KNIGA or architecture data.
+- `components/kniga/data/` owns product data contracts and configuration; `structure/` owns product composition contracts; `view/` owns view contracts; `source/` owns source contracts.
+- `components/architecture/definitions.ts` owns domain types; `architecture/models/` owns taxonomy/model catalogs; `architecture/instances/` owns concrete registry rows and preserved research instances.
+- `architecture-specification-registry.ts` owns normalized framework profiles and typed custom metadata inside `architecture/instances/`.
+- `architecture-taxonomy.ts` owns the preserved taxonomy catalog inside `architecture/models/`; do not prune it to simplify a UI.
 - `index.css` is the shared visual system. Extend it; do not replace it with a partial file.
 
 ## Backend boundaries
@@ -59,7 +64,7 @@ Before changing a large file or data module:
 5. Confirm existing counts and key IDs remain present.
 6. Compare the result with the current roadmap gate before checkpointing.
 
-Never use a scaffold overwrite to replace `Home.tsx`, `index.css`, taxonomy data, migrations, or the registry.
+Never use a scaffold overwrite to replace `Home.tsx`, `index.css`, taxonomy data, migrations, or the registry. When adding a new concept, decide first whether it is a definition, model catalog, instance, source, or view concern and place it in the corresponding layer.
 
 ## Roadmap ownership
 

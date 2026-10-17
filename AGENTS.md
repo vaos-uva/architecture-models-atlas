@@ -30,12 +30,15 @@ Do not load every document by default. Use the index to disclose detail only whe
 
 | Area | Entrypoint | Purpose |
 |---|---|---|
-| Main UI | `client/src/pages/Home.tsx` | Atlas sections, interactions, export/share, storage shelf, product branding |
+| Main UI | `client/src/pages/Home.tsx` | KNIGA page composition and local interaction state; consume data, do not define domain instances here |
 | Design system | `client/src/index.css` | Editorial palette, layout, responsive rules, focus states |
 | HTML metadata | `client/index.html` | Title, description, author, canonical host, theme metadata |
 | App shell | `client/src/App.tsx`, `client/src/main.tsx` | Routing, providers, client boot |
-| Framework registry | `client/src/lib/architecture-specification-registry.ts` | Typed architecture rows and metadata |
-| Taxonomy | `client/src/lib/architecture-taxonomy.ts` | Preserved architecture taxonomy catalogs |
+| OZCO abstract components | `client/src/components/ozco/abstract/` | Brand-agnostic contracts and reusable primitives; no KNIGA or architecture data |
+| KNIGA product layers | `client/src/components/kniga/{data,structure,view,source}/` | Product data contracts, composition boundaries, view contracts, and source contracts |
+| Architecture definitions | `client/src/components/architecture/definitions.ts` | Domain types only: concepts, registry contracts, mappings, and model records |
+| Architecture models | `client/src/components/architecture/models/` | Taxonomy and normalized model definitions |
+| Architecture instances | `client/src/components/architecture/instances/` | Registry rows and preserved research instances |
 | Backend | `server/index.ts` | Express server, API routes, Vite/static serving |
 | Database | `drizzle/schema.ts`, `server/db.ts` | Metadata schema and persistence helpers |
 | Storage | `server/storage.ts`, `server/file-storage-utils.ts` | Object storage and upload validation |
@@ -49,6 +52,7 @@ Do not load every document by default. Use the index to disclose detail only whe
 - **Prefer additive changes.** Add fields, rows, sections, and migrations; do not silently rename or delete existing identifiers.
 - **Use stable IDs.** Registry rows, taxonomy entities, concepts, mapping targets, anchors, and exported records need stable IDs.
 - **Use configuration, not duplication.** Reuse typed arrays and shared renderers for framework lenses, package lists, cards, tabs, and mappings. Follow DRY and SOLID principles.
+- **Respect the layer split.** OZCO is agnostic; KNIGA owns product structure/data/view/source boundaries; architecture owns domain definitions, models, and instances. Do not import upward from data into view or product code into OZCO.
 - **Keep claims traceable.** Attach source URLs to framework records and label derived mappings as `direct`, `approximate`, `complementary`, `not applicable`, or `atlas synthesis`.
 - **Do not expose secrets.** Never commit `.env` files, credentials, database URLs, API keys, session tokens, or generated private URLs to source or documentation.
 - **Protect private artifacts.** Storage reads, writes, and deletes must remain owner-scoped. Database metadata and object storage must not drift silently.
@@ -61,6 +65,7 @@ Do not load every document by default. Use the index to disclose detail only whe
 - **Research a framework:** read [`docs/agent/actions.md`](docs/agent/actions.md) and the reusable research skill first.
 - **Add a framework:** update the typed registry, add source-backed content, add the interactive lens, mapping, export, source trail, tests, and responsive verification.
 - **Change the registry:** preserve all rows; extend the type before populating metadata; update search/filter/sort/modal/export behavior and regression tests.
+- **Refactor component boundaries:** put reusable agnostic contracts in `client/src/components/ozco/abstract/`, KNIGA contracts/data in `client/src/components/kniga/`, architecture types in `client/src/components/architecture/definitions.ts`, model catalogs in `architecture/models/`, and concrete research rows in `architecture/instances/`. Keep `Home.tsx` as composition/state only.
 - **Change storage/backend:** read [`docs/agent/architecture.md`](docs/agent/architecture.md) and [`docs/agent/testing.md`](docs/agent/testing.md); use additive migrations and owner-scoped tests.
 - **Change branding/metadata:** read [`docs/agent/roadmap.md`](docs/agent/roadmap.md); update the existing brand slot and `client/index.html` metadata without redesigning the atlas.
 - **Change visuals:** inspect existing CSS and reuse tokens/classes; verify wide and narrow layouts before checkpointing.
