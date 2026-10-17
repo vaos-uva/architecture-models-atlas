@@ -50,7 +50,7 @@ export type ArchitectureSpecification = {
   /** Interoperability, conformance, or relationship mechanism. */
   interoperability: string;
   /** Canonical atlas section anchor. */
-  atlasAnchor: "context" | "c4" | "mof" | "togaf" | "archimate" | "dragon1" | "metamodel";
+  atlasAnchor: "context" | "core" | "c4" | "mof" | "mda" | "togaf" | "archimate" | "dragon1" | "metamodel";
   /** Canonical source URLs associated with the registered row. */
   sources: readonly string[];
   /** Cross-model tags used for filtering and future registry views. */
@@ -126,6 +126,27 @@ export const architectureSpecificationRegistry: ArchitectureSpecification[] = [
     ],
     tags: ["metamodeling", "mof", "xmi", "interchange", "transformation", "mda"],
     metadata: { evidenceLevel: "normative", governanceScope: "metamodeling-and-interchange", stageGates: ["define", "conform", "exchange"] },
+  },
+  {
+    id: "omg-mda",
+    name: "OMG Model Driven Architecture",
+    acronym: "MDA",
+    kind: "method",
+    status: "current",
+    version: "MDA Guide Revision 2.0 · 2014",
+    primaryQuestion: "How can models remain stable while platforms and implementations change?",
+    abstraction: "Computation-independent, platform-independent, and platform-specific models connected by mappings and transformations.",
+    primaryArtifact: "MOF-based models, PIM/PSM mappings, XMI exchange artifacts, and working implementations.",
+    interoperability: "MOF-based languages, UML, XMI, repositories, mappings, and transformations support portability and interoperability across platforms.",
+    atlasAnchor: "mda",
+    sources: [
+      "https://www.omg.org/mda/",
+      "https://www.omg.org/mda/specs.htm",
+      "https://www.omg.org/mda/executive_overview.htm",
+      "https://www.omg.org/cgi-bin/doc?ormsc/14-06-01",
+    ],
+    tags: ["model-driven", "mda", "pim", "psm", "transformation", "platform-independence", "mof", "uml", "xmi", "interoperability"],
+    metadata: { evidenceLevel: "official-omg-architecture", governanceScope: "model-driven-development-and-interoperability", stageGates: ["frame", "model", "map", "transform", "exchange", "realize"] },
   },
   {
     id: "togaf-standard",
