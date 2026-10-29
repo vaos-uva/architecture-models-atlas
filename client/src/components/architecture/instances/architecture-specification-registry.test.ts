@@ -38,4 +38,13 @@ describe("architecture specification registry metadata", () => {
     expect(architectureSpecificationRegistry.find((item) => item.id === "generalized-architecture-metamodel")?.metadata?.evidenceLevel).toBe("atlas-synthesis");
     expect(architectureSpecificationRegistry.find((item) => item.id === "dragon1-ea-metamodel")?.metadata?.stageGates).toEqual(["define", "structure", "visualize", "realize"]);
   });
+
+  it("keeps the TOGAF content-metamodel source trail attached to the row", () => {
+    const togaf = architectureSpecificationRegistry.find((item) => item.id === "togaf-standard");
+    expect(togaf?.sources).toEqual(expect.arrayContaining([
+      "https://pubs.opengroup.org/architecture/togaf9-doc/arch/chap30.html",
+      "https://www.archipeg.com/learn/togaf-9p2-content-v1-metamodel",
+      "https://www.archipeg.com/learn/enterprise-architecture-vs-solution-architecture",
+    ]));
+  });
 });

@@ -35,6 +35,13 @@ export const concepts: Concept[] = [
   { id: "mda-psm", name: "Platform-Specific Model", short: "A PIM mapped to a target platform", detail: "A PSM adds the details required by a chosen implementation platform. MDA development tools transform the PIM into one or more PSMs before producing a working implementation.", category: "OMG MDA model level", edition: "MDA Guide rev. 2.0", anchor: "mda" },
   { id: "mda-transformation", name: "Model Transformation", short: "A governed mapping between model levels", detail: "Transformation is the bridge from a more abstract model to a more concrete model or implementation. The mapping preserves intent while introducing platform, domain, or deployment detail.", category: "OMG MDA mechanism", edition: "MDA Guide rev. 2.0", anchor: "mda" },
   { id: "mda-mof-foundation", name: "MOF-based Modeling Foundation", short: "Models as first-class interoperable artifacts", detail: "OMG describes MOF as a key foundation for MDA. MOF-based languages let models be stored in compliant repositories, parsed and transformed by compatible tools, and rendered into XMI for transport.", category: "OMG MDA foundation", edition: "MDA specifications", anchor: "mda" },
+  { id: "enterprise-architecture", name: "Enterprise Architecture", short: "High-level decision context for the enterprise", detail: "ArchiPeg describes Enterprise Architecture as a high-level, nearly abstract decision-making framework that collects and analyzes enterprise knowledge to inform organizational decisions and transformation.", category: "Architecture role", edition: "ArchiPeg explainer", anchor: "model-theory" },
+  { id: "solution-architecture", name: "Solution Architecture", short: "A medium-level response to a bounded problem", detail: "ArchiPeg positions Solution Architecture between Enterprise and Application Architecture. It addresses concrete implementation, hosting, deployment, and integration questions and can act as a constituent of the wider enterprise architecture.", category: "Architecture role", edition: "ArchiPeg explainer", anchor: "model-theory" },
+  { id: "architecture-partnership", name: "EA–SA Partnership", short: "Connect abstract direction to technical strategy", detail: "The ArchiPeg explainer treats Enterprise and Solution Architecture as complementary practices: enterprise architects frame high-level problems while solution architects help turn that direction into technical strategies.", category: "Architecture role", edition: "ArchiPeg explainer", anchor: "model-theory" },
+  { id: "model-language", name: "Model Language", short: "Symbols and rules used to state a model", detail: "The Stanford Encyclopedia of Philosophy presents model theory as the study of formal or natural language and its interpretations by structures. For architecture work, this is an interpretive bridge: a metamodel or notation supplies terms and rules, but does not automatically make a system description true.", category: "Model theory", edition: "SEP · 2020 revision", anchor: "model-theory" },
+  { id: "model-structure", name: "Interpretation / Structure", short: "The objects and relations assigned to model terms", detail: "In the model-theory account, an interpretation supplies what expressions refer to and which classes quantifiers range over; these assignments form a structure. Architecture models similarly need named elements, domains, and relationships before claims can be evaluated.", category: "Model theory", edition: "SEP · 2020 revision", anchor: "model-theory" },
+  { id: "model-satisfaction", name: "Satisfaction", short: "A structure makes a statement true", detail: "A structure satisfies a sentence when its interpretation makes the sentence true in that structure. This is a useful teaching analogy for conformance and validation, but it is not a direct definition of architecture correctness.", category: "Model theory", edition: "SEP · 2020 revision", anchor: "model-theory" },
+  { id: "model-theory", name: "Theory and Model Class", short: "Constraints define a class of acceptable structures", detail: "The SEP entry describes a theory as a set of sentences or axioms and Mod(T) as the class of structures that satisfy them together. Architecture metamodels and constraints can be compared to this pattern only as an interpretive analogy, not as a claim that every architecture language is a formal theory.", category: "Model theory", edition: "SEP · 2020 revision", anchor: "model-theory" },
 ];
 
 export const c4Levels = [
@@ -61,6 +68,30 @@ export const togafSteps = [
   { id: "migration", number: "F", label: "Migration Planning", title: "Sequence the transition", purpose: "Prioritize projects, assess costs and benefits, and create a detailed implementation and migration plan.", output: "Implementation and Migration Plan", tone: "blue" },
   { id: "governance", number: "G", label: "Implementation Governance", title: "Keep delivery aligned", purpose: "Provide architectural oversight during implementation and establish contracts, compliance reviews, and governance controls.", output: "Architecture contract and compliance", tone: "navy" },
   { id: "change", number: "H", label: "Architecture Change Management", title: "Keep the architecture alive", purpose: "Monitor changes in the business and technology environment and determine when a new architecture cycle should begin.", output: "Change requests and new cycle", tone: "paper" },
+] as const;
+
+export const architectureRoleLenses = [
+  { id: "enterprise", number: "01", label: "Enterprise Architecture", title: "Frame the decision field", purpose: "A high-level decision context collects and analyzes knowledge about the enterprise so leaders can reason about transformation and direction.", scope: "Enterprise-wide context", output: "Direction, governance, and transformation context", tone: "navy" },
+  { id: "solution", number: "02", label: "Solution Architecture", title: "Shape a bounded response", purpose: "A medium-level architecture connects a specific problem space to implementation, hosting, deployment, and integration choices.", scope: "A solution or initiative", output: "Technical strategy and realization choices", tone: "blue" },
+  { id: "partnership", number: "03", label: "EA–SA partnership", title: "Connect intent to realization", purpose: "The ArchiPeg explainer presents the two practices as complementary: enterprise direction becomes useful when solution-level technical strategy can carry it into delivery.", scope: "The boundary between intent and delivery", output: "Traceable decisions across levels", tone: "rust" },
+] as const;
+
+export const togafContentObjects = [
+  { id: "actor", name: "Actor", module: "Core", detail: "A person, organization, or system that initiates or interacts with activities." },
+  { id: "business-capability", name: "Business Capability", module: "Core", detail: "An ability a business may possess or exchange to achieve a purpose." },
+  { id: "business-service", name: "Business Service", module: "Core", detail: "A governed service that supports business capabilities through an explicit interface." },
+  { id: "data-entity", name: "Data Entity", module: "Core", detail: "A thing recognized by a business domain expert as data." },
+  { id: "driver", name: "Driver", module: "Motivation", detail: "An internal or external condition that motivates goals." },
+  { id: "goal", name: "Goal", module: "Motivation", detail: "A high-level statement of intent or direction used to measure success." },
+  { id: "logical-application-component", name: "Logical Application Component", module: "Core", detail: "Application functionality independent of a particular implementation." },
+  { id: "gap", name: "Gap", module: "Core", detail: "A statement of difference between baseline and target states." },
+] as const;
+
+export const modelTheoryLenses = [
+  { id: "language", number: "01", label: "Language", title: "Name the terms first", purpose: "A model-theoretic view starts with a language whose expressions can be interpreted. In architecture, this is the vocabulary, notation, or metamodel used to state a claim.", artifact: "Signature, notation, or metamodel", tone: "navy" },
+  { id: "structure", number: "02", label: "Structure", title: "Assign the referents", purpose: "An interpretation assigns objects, classes, and relations to the terms. Architecture models need the same discipline: identify the domain, elements, relationships, and scope being described.", artifact: "Named elements, domains, and relations", tone: "blue" },
+  { id: "satisfaction", number: "03", label: "Satisfaction", title: "Test a statement in a structure", purpose: "A structure satisfies a sentence when the interpreted sentence is true in that structure. This resembles validation, but architecture correctness still depends on purpose, evidence, and stakeholder concerns.", artifact: "Constraint or validation result", tone: "rust" },
+  { id: "theory", number: "04", label: "Theory", title: "Collect the constraints", purpose: "A theory is a set of sentences or axioms; its model class contains the structures that satisfy them together. Architecture constraints can borrow this pattern as a precise explanatory analogy.", artifact: "Constraint set and acceptable models", tone: "paper" },
 ] as const;
 
 export const archiMateLayers = [
@@ -210,4 +241,3 @@ export const chartData = [
   { edition: "42010 · 2011", concepts: 12, fill: "#5c78a1" },
   { edition: "42010 · 2022", concepts: 15, fill: "#c65d3a" },
 ];
-

@@ -12,6 +12,11 @@ Use this index after reading the repository [`AGENTS.md`](../AGENTS.md). It is i
 | [`skills.md`](agent/skills.md) | You need to choose a reusable skill for research, data, web development, storage, configuration, images, or skill authoring. |
 | [`testing.md`](agent/testing.md) | You need validation gates, regression coverage, browser smoke checks, or release evidence. |
 | [`roadmap.md`](agent/roadmap.md) | You need the current KNIGA product goal, milestone order, Definition of Done, or next implementation item. |
+| [`content-style.md`](agent/content-style.md) | You need to write architecture explanations, case studies, comparisons, or source-grounded learning copy. |
+
+## Research notes
+
+- [`2026-10-29-archipeg-model-theory.md`](research/2026-10-29-archipeg-model-theory.md) — evidence, interpretation boundaries, and source URLs for the ArchiPeg and model-theory additions.
 
 ## Entry points by task
 
@@ -22,6 +27,7 @@ Use this index after reading the repository [`AGENTS.md`](../AGENTS.md). It is i
 - **Modify upload/storage:** `drizzle/schema.ts` → migration → `server/db.ts` → `server/storage.ts` / `server/index.ts` → tests → UI shelf.
 - **Modify layout/theme/branding:** `client/index.html` → existing brand JSX in `Home.tsx` → existing tokens in `index.css` → wide/narrow screenshots.
 - **Research external sources:** deep-research workflow → official sources → typed data → source trail → validation.
+- **Write explanatory architecture content:** `docs/agent/content-style.md` → source claim → plain-language example → explicit boundary.
 - **Update the reusable skill:** `/home/ubuntu/skills/skill-creator/SKILL.md` → `/home/ubuntu/skills/research-to-architecture-atlas/SKILL.md` → official validator.
 - **Release and push:** roadmap gate → validation commands → diff/status → commit → configured Git remote → verify remote head.
 

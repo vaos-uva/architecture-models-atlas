@@ -112,6 +112,9 @@ export const architectureSpecificationRegistry: ArchitectureSpecification[] = [
     sources: [
       "https://www.opengroup.org/togaf",
       "https://publications.opengroup.org/togaf-library",
+      "https://pubs.opengroup.org/architecture/togaf9-doc/arch/chap30.html",
+      "https://www.archipeg.com/learn/togaf-9p2-content-v1-metamodel",
+      "https://www.archipeg.com/learn/enterprise-architecture-vs-solution-architecture",
     ],
     tags: ["enterprise-architecture", "adm", "governance", "roadmap", "migration", "capability"],
     metadata: { evidenceLevel: "method-guidance", governanceScope: "enterprise-architecture", stageGates: ["vision", "govern", "change"] },
