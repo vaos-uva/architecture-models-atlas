@@ -18,6 +18,15 @@ Use this index after reading the repository [`AGENTS.md`](../AGENTS.md). It is i
 
 - [`2026-10-29-archipeg-model-theory.md`](research/2026-10-29-archipeg-model-theory.md) — evidence, interpretation boundaries, and source URLs for the ArchiPeg and model-theory additions.
 
+## Foundation artifacts
+
+- [`01-discovery.md`](../artifacts/01-discovery.md) — current facts, risks, and recommended next step.
+- [`02-definitions.md`](../artifacts/02-definitions.md) — canonical term, model, view, provenance, and ownership definitions.
+- [`03-goal-dod.md`](../artifacts/03-goal-dod.md) — measurable goal, scope, acceptance gates, and stop conditions.
+- [`04-contracts.md`](../artifacts/04-contracts.md) — multilingual, compatibility, model/view, and export contracts.
+- [`05-plan.md`](../artifacts/05-plan.md) — gated agent operating method and implementation sequence.
+- [`visual-roadmap.md`](../artifacts/visual-roadmap.md) — staged roadmap for richer visual projections.
+
 ## Entry points by task
 
 - **Add or compare a framework:** `client/src/components/architecture/definitions.ts` → `architecture/instances/architecture-specification-registry.ts` → KNIGA data/view → `Home.tsx` → tests → source trail/export.

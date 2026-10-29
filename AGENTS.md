@@ -64,6 +64,8 @@ Do not load every document by default. Use the index to disclose detail only whe
 
 - **Research a framework:** read [`docs/agent/actions.md`](docs/agent/actions.md) and the reusable research skill first.
 - **Write explanatory content:** read [`docs/agent/content-style.md`](docs/agent/content-style.md); distinguish source claims, interpretation, and atlas synthesis.
+- **Start a substantial change:** read `artifacts/01-discovery.md` through `artifacts/05-plan.md`; update definitions/contracts before implementation.
+- **Add multilingual or visual behavior:** read `artifacts/02-definitions.md`, `artifacts/04-contracts.md`, and `artifacts/visual-roadmap.md`; keep models separate from views.
 - **Add a framework:** update the typed registry, add source-backed content, add the interactive lens, mapping, export, source trail, tests, and responsive verification.
 - **Change the registry:** preserve all rows; extend the type before populating metadata; update search/filter/sort/modal/export behavior and regression tests.
 - **Refactor component boundaries:** put reusable agnostic contracts in `client/src/components/ozco/abstract/`, KNIGA contracts/data in `client/src/components/kniga/`, architecture types in `client/src/components/architecture/definitions.ts`, model catalogs in `architecture/models/`, and concrete research rows in `architecture/instances/`. Keep `Home.tsx` as composition/state only.

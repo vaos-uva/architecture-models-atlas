@@ -262,11 +262,11 @@ export default function Home() {
   return (
     <div className="atlas-shell">
       <header className="topbar">
-        <a href="#top" className="brand" aria-label="KNIGA in OZCO · Architecture Models Atlas home">
+        <a href="#top" className="brand" aria-label="KNIGA · Architecture Models Atlas home">
           <span className="brand-mark"><img src="/manus-storage/atlas-mark_d0d985a0.png" alt="" /></span>
-          <span className="brand-copy"><strong className="brand-ozco">KNIGA</strong><em className="brand-computation">in OZCO</em></span>
+          <span className="brand-copy"><strong className="brand-ozco">KNIGA · ARCHITECTURE MODELS ATLAS</strong><em className="brand-computation">BOOK · VAOS KNOWLEGE</em></span>
         </a>
-        <div className="topbar-meta"><span className="eyebrow">FIELD NOTE 01</span><span className="topbar-line" /><span>ISO 42010 · OMG MDA · TOGAF · ArchiMate · Dragon1</span></div>
+        <div className="topbar-meta"><span className="eyebrow">OZCO · Usan VA</span></div>
         <div className="topbar-actions">
           <button className="icon-button mobile-menu" onClick={() => setMobileNav((value) => !value)} aria-label="Toggle navigation"><Menu size={18} /></button>
           <button className="text-button" onClick={downloadAtlas}><Download size={16} /> Save atlas</button>
