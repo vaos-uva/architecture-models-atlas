@@ -1,3 +1,10 @@
+<!-- ident: docs.agent.skills
+category: agent-guide
+purpose: govern
+role: documentation
+semantic: rules
+universe: documentation -->
+
 # Agent Skills
 
 Use the smallest applicable skill, and read its `SKILL.md` before starting that class of work.

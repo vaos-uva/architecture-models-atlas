@@ -1,3 +1,10 @@
+<!-- ident: artifacts.visual-roadmap
+category: artifact
+purpose: define
+role: documentation
+semantic: definition
+universe: kniga -->
+
 # KNIGA Visual Roadmap
 
 ## Stage 0 — Foundation

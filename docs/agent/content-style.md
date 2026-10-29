@@ -1,3 +1,10 @@
+<!-- ident: docs.agent.content-style
+category: agent-guide
+purpose: govern
+role: documentation
+semantic: rules
+universe: documentation -->
+
 # KNIGA Content Style Guide
 
 This guide distills the attached OZCO practicum writing notes for architecture education and research content. It governs explanatory copy, not normative source claims.

@@ -1,3 +1,10 @@
+<!-- ident: docs.agent.roadmap
+category: agent-guide
+purpose: govern
+role: documentation
+semantic: rules
+universe: documentation -->
+
 # KNIGA Product Roadmap
 
 ## Product identity

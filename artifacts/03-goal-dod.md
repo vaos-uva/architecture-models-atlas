@@ -1,3 +1,10 @@
+<!-- ident: artifacts.03-goal-dod
+category: artifact
+purpose: define
+role: documentation
+semantic: definition
+universe: kniga -->
+
 # KNIGA Goal and Definition of Done
 
 ## Goal

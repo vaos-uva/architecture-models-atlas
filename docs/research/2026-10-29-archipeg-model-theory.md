@@ -1,3 +1,10 @@
+<!-- ident: docs.research.2026-10-29-archipeg-model-theory
+category: research
+purpose: research
+role: source
+semantic: provenance
+universe: architecture -->
+
 # ArchiPeg and Model Theory Research Note
 
 ## ArchiPeg: enterprise and solution architecture

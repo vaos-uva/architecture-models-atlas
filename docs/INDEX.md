@@ -1,3 +1,10 @@
+<!-- ident: docs.index
+category: index
+purpose: govern
+role: documentation
+semantic: definition
+universe: documentation -->
+
 # Agent Documentation Index
 
 Use this index after reading the repository [`AGENTS.md`](../AGENTS.md). It is intentionally organized as progressive disclosure: start with the smallest guide that matches the task.
@@ -13,10 +20,21 @@ Use this index after reading the repository [`AGENTS.md`](../AGENTS.md). It is i
 | [`testing.md`](agent/testing.md) | You need validation gates, regression coverage, browser smoke checks, or release evidence. |
 | [`roadmap.md`](agent/roadmap.md) | You need the current KNIGA product goal, milestone order, Definition of Done, or next implementation item. |
 | [`content-style.md`](agent/content-style.md) | You need to write architecture explanations, case studies, comparisons, or source-grounded learning copy. |
+| [`foundation-governance.md`](agent/foundation-governance.md) | You need enums, concern classifiers, separation-of-concerns rules, file headers, or root-directory placement. |
 
 ## Research notes
 
 - [`2026-10-29-archipeg-model-theory.md`](research/2026-10-29-archipeg-model-theory.md) — evidence, interpretation boundaries, and source URLs for the ArchiPeg and model-theory additions.
+- [`c4-research.md`](research/c4-research.md) — C4 source and integration research.
+- [`mof-research.md`](research/mof-research.md) — MOF source and integration research.
+- [`comparison-research.md`](research/comparison-research.md) — cross-framework comparison research.
+
+## Project records
+
+Product ideas, task lists, and decision records belong under `docs/project/`; research evidence belongs under `docs/research/`; agent procedures belong under `docs/agent/`.
+
+- [`ideas.md`](project/ideas.md) — product and visual direction history.
+- [`todo.md`](project/todo.md) — current project checklist.
 
 ## Foundation artifacts
 
@@ -42,8 +60,8 @@ Use this index after reading the repository [`AGENTS.md`](../AGENTS.md). It is i
 
 ## Useful project files
 
-- `todo.md` — project-level checklist.
-- `c4-research.md`, `mof-research.md`, `comparison-research.md` — existing research notes when present.
+- `docs/project/todo.md` — project-level checklist.
+- `docs/research/` — source-grounded research notes.
 - `package.json` — authoritative scripts and dependencies.
 - `.project-config.json` — WebDev project capabilities; do not copy secrets into docs.
 - `client/index.html` — KNIGA product title and canonical host metadata.

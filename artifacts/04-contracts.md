@@ -1,3 +1,10 @@
+<!-- ident: artifacts.04-contracts
+category: artifact
+purpose: define
+role: documentation
+semantic: definition
+universe: kniga -->
+
 # KNIGA Contract Baseline
 
 ## Term contract

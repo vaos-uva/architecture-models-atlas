@@ -1,3 +1,10 @@
+<!-- ident: artifacts.01-discovery
+category: artifact
+purpose: define
+role: documentation
+semantic: definition
+universe: kniga -->
+
 # KNIGA Discovery Baseline
 
 ## Facts

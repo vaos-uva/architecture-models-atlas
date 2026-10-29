@@ -1,3 +1,10 @@
+<!-- ident: docs.agent.actions
+category: agent-guide
+purpose: govern
+role: documentation
+semantic: rules
+universe: documentation -->
+
 # Agent Actions
 
 ## A. Research and add a framework

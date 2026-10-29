@@ -1,3 +1,10 @@
+<!-- ident: docs.project.todo
+category: project-record
+purpose: govern
+role: documentation
+semantic: state
+universe: kniga -->
+
 # C4 Model integration
 
 - [x] Open and read the provided Visual Paradigm C4 Model article.

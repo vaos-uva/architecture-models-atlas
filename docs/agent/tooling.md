@@ -1,3 +1,10 @@
+<!-- ident: docs.agent.tooling
+category: agent-guide
+purpose: govern
+role: documentation
+semantic: rules
+universe: documentation -->
+
 # Agent Tooling
 
 ## Local commands

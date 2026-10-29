@@ -1,3 +1,10 @@
+<!-- ident: artifacts.05-plan
+category: artifact
+purpose: define
+role: documentation
+semantic: definition
+universe: kniga -->
+
 # KNIGA Foundation Plan
 
 ## Agent operating method

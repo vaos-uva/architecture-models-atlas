@@ -1,3 +1,10 @@
+<!-- ident: docs.agent.testing
+category: agent-guide
+purpose: govern
+role: documentation
+semantic: rules
+universe: documentation -->
+
 # Testing and Validation Guide
 
 ## Required gates

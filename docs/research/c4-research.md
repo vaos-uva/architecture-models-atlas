@@ -1,3 +1,10 @@
+<!-- ident: docs.research.c4
+category: research
+purpose: research
+role: source
+semantic: taxonomy
+universe: architecture -->
+
 # C4 Model research notes
 
 ## Primary source

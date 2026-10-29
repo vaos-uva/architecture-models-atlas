@@ -1,3 +1,10 @@
+<!-- ident: docs.research.comparison
+category: research
+purpose: compare
+role: source
+semantic: mapping
+universe: architecture -->
+
 # Cross-model comparison and XMI walkthrough
 
 ## Terminology confirmed

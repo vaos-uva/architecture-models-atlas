@@ -1,3 +1,10 @@
+<!-- ident: docs.research.mof
+category: research
+purpose: research
+role: source
+semantic: definition
+universe: architecture -->
+
 # OMG MOF research notes
 
 ## Primary source

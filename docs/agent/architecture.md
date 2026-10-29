@@ -1,4 +1,13 @@
+<!-- ident: docs.agent.architecture
+category: architecture
+purpose: define
+role: documentation
+semantic: definition
+universe: architecture -->
+
 # Atlas Architecture Guide
+
+For the authoritative concern enums, file-header contract, and root-directory placement rules, read [`foundation-governance.md`](foundation-governance.md).
 
 ## Runtime flow
 
@@ -32,6 +41,10 @@ Browser
 - `architecture-specification-registry.ts` owns normalized framework profiles and typed custom metadata inside `architecture/instances/`.
 - `architecture-taxonomy.ts` owns the preserved taxonomy catalog inside `architecture/models/`; do not prune it to simplify a UI.
 - `index.css` is the shared visual system. Extend it; do not replace it with a partial file.
+
+Every new or substantially edited authored file must declare its `ident` and `category` at the top. Prefer the full `purpose` / `role` / `semantic` / `universe` classification. A file may not combine domain definitions, model instances, source evidence, view projections, and rendering merely because they are displayed together.
+
+The dependency direction is one-way: OZCO abstract primitives → architecture definitions/models/instances → KNIGA source/data → KNIGA projections/views → renderers. Browser APIs, persistence, and external payloads cross these boundaries only through adapters.
 
 ## Backend boundaries
 

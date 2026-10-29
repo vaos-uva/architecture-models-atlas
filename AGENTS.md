@@ -1,3 +1,10 @@
+<!-- ident: repository.agents
+category: governance
+purpose: govern
+role: documentation
+semantic: definition
+universe: kniga -->
+
 # AGENTS.md — KNIGA Architecture Models Atlas
 
 This is the **entrypoint for coding agents** working in this repository. Read this file first, then open only the task-specific guide you need from [`docs/INDEX.md`](docs/INDEX.md).
@@ -11,10 +18,12 @@ Maintain **KNIGA in OZCO**: a trustworthy, source-grounded, interactive architec
 1. Read this file for non-negotiable rules and commands.
 2. Read [`docs/INDEX.md`](docs/INDEX.md) and select the smallest relevant guide.
 3. For roadmap work, read [`docs/agent/roadmap.md`](docs/agent/roadmap.md).
-4. Inspect the current code entrypoint before editing.
-5. Make the smallest configuration-driven change that satisfies the request.
-6. Run the validation gates listed below.
-7. Record the change in the source trail, tests, release notes, checkpoint, or roadmap as appropriate.
+4. For foundation, placement, or boundary work, read [`docs/agent/foundation-governance.md`](docs/agent/foundation-governance.md).
+5. Inspect the current code entrypoint before editing.
+6. Classify the concern by purpose, role, semantic, and universe before choosing a file.
+7. Make the smallest configuration-driven change that satisfies the request.
+8. Run the validation gates listed below.
+9. Record the change in the source trail, tests, release notes, checkpoint, or roadmap as appropriate.
 
 Do not load every document by default. Use the index to disclose detail only when the task requires it.
 
@@ -44,10 +53,15 @@ Do not load every document by default. Use the index to disclose detail only whe
 | Storage | `server/storage.ts`, `server/file-storage-utils.ts` | Object storage and upload validation |
 | Tests | `server/*.test.ts`, `client/src/lib/*.test.ts` | Backend and registry regression coverage |
 | Agent docs | `AGENTS.md`, `docs/` | Repository instructions and progressive disclosure |
+| Research records | `docs/research/` | Source-grounded notes, claims, and comparison evidence |
+| Project records | `docs/project/` | Ideas, task lists, decisions, and product planning |
 | Reusable workflow | `/home/ubuntu/skills/research-to-architecture-atlas/SKILL.md` | Research-to-atlas process |
 
 ## 5. Non-negotiable rules
 
+- **Separate concerns.** Definitions, models, instances, sources, data, structure, projections, views, renderers, persistence, tests, and documentation have distinct ownership. Do not mix domain meaning with presentation or runtime effects.
+- **Classify every authored file.** New or substantially edited files must declare `ident` and `category` at the top; preferred headers also declare `purpose`, `role`, `semantic`, and `universe`. Use the allowed enums in [`docs/agent/foundation-governance.md`](docs/agent/foundation-governance.md).
+- **Keep the root intentional.** Research, product planning, and agent procedures do not belong in the repository root. Move them to the governed directories and update all references with history preserved.
 - **No data loss.** Never replace a research dataset, registry row, taxonomy catalog, migration, or stylesheet wholesale unless you have first compared it and preserved all required content.
 - **Prefer additive changes.** Add fields, rows, sections, and migrations; do not silently rename or delete existing identifiers.
 - **Use stable IDs.** Registry rows, taxonomy entities, concepts, mapping targets, anchors, and exported records need stable IDs.
@@ -73,6 +87,7 @@ Do not load every document by default. Use the index to disclose detail only whe
 - **Change branding/metadata:** read [`docs/agent/roadmap.md`](docs/agent/roadmap.md); update the existing brand slot and `client/index.html` metadata without redesigning the atlas.
 - **Change visuals:** inspect existing CSS and reuse tokens/classes; verify wide and narrow layouts before checkpointing.
 - **Update documentation:** keep this file short; put detailed procedures in `docs/agent/` and update the index.
+- **Classify or restructure files:** read [`docs/agent/foundation-governance.md`](docs/agent/foundation-governance.md); classify the concern, use `git mv`, update references, and run the placement/header gates.
 - **Release and push:** follow the release recipe in [`docs/agent/actions.md`](docs/agent/actions.md); push only the validated intended branch/remote.
 
 ## 7. Validation gates

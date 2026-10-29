@@ -1,3 +1,10 @@
+<!-- ident: docs.project.ideas
+category: project-record
+purpose: define
+role: documentation
+semantic: history
+universe: kniga -->
+
 # Architecture Models Atlas — Design Direction
 
 ## Three directions considered

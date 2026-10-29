@@ -1,3 +1,10 @@
+<!-- ident: artifacts.02-definitions
+category: artifact
+purpose: define
+role: documentation
+semantic: definition
+universe: kniga -->
+
 # KNIGA Foundation Definitions
 
 ## Canonical term normal form
