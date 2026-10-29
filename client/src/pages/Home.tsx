@@ -13,6 +13,7 @@ import {
   FileText,
   Filter,
   Layers3,
+  Languages,
   Link2,
   Menu,
   Network,
@@ -72,6 +73,13 @@ function metadataValueParts(value: string | number | boolean | readonly string[]
   return Array.isArray(value) ? value.map(String) : [String(value)];
 }
 
+type Locale = "en" | "ru";
+
+const uiText: Record<Locale, { save: string; share: string; copied: string; language: string; atlasTitle: string; heroKicker: string }> = {
+  en: { save: "Save atlas", share: "Share", copied: "Copied", language: "Language", atlasTitle: "Architecture Models Atlas", heroKicker: "A visual guide to architecture description" },
+  ru: { save: "Сохранить атлас", share: "Поделиться", copied: "Скопировано", language: "Язык", atlasTitle: "Атлас архитектурных моделей", heroKicker: "Визуальный путеводитель по описанию архитектуры" },
+};
+
 const nodePositions: Record<string, { x: number; y: number; w: number; h: number; tone: string }> = {
   environment: { x: 346, y: 28, w: 172, h: 52, tone: "blue" },
   entity: { x: 92, y: 132, w: 188, h: 62, tone: "rust" },
@@ -106,6 +114,7 @@ function MapNode({ id, selected, onSelect }: { id: string; selected: string; onS
 }
 
 export default function Home() {
+  const [locale, setLocale] = useState<Locale>("en");
   const [activeEdition, setActiveEdition] = useState<Edition>("2022");
   const [selectedId, setSelectedId] = useState("ad");
   const [selectedC4, setSelectedC4] = useState("context");
@@ -135,6 +144,7 @@ export default function Home() {
   const [storageTitle, setStorageTitle] = useState("");
   const [storageDescription, setStorageDescription] = useState("");
   const [storageFile, setStorageFile] = useState<File | null>(null);
+  const copy = uiText[locale];
 
   const taxonomyStats = useMemo(() => getCatalogStats(), []);
 
@@ -235,13 +245,13 @@ export default function Home() {
   };
 
   const sharePage = async () => {
-    const shareData = { title: "Architecture Models Atlas", text: "An interactive guide to ISO 42010, OMG MDA, TOGAF, ArchiMate, C4, MOF, ArchiPeg architecture roles, and model theory.", url: window.location.href };
+    const shareData = { title: copy.atlasTitle, text: "An interactive guide to ISO 42010, OMG MDA, TOGAF, ArchiMate, C4, MOF, ArchiPeg architecture roles, and model theory.", url: window.location.href };
     try {
       const canShare = Boolean((navigator as Navigator & { share?: unknown }).share);
       if (canShare) await (navigator as Navigator & { share: (data: ShareData) => Promise<void> }).share(shareData);
       else await navigator.clipboard.writeText(window.location.href);
       setCopied(true);
-      toast.success(canShare ? "Share sheet opened" : "Page link copied");
+      toast.success(canShare ? (locale === "ru" ? "Открыто меню публикации" : "Share sheet opened") : (locale === "ru" ? "Ссылка скопирована" : "Page link copied"));
       window.setTimeout(() => setCopied(false), 1800);
     } catch {
       toast.info("Sharing was cancelled");
@@ -260,17 +270,22 @@ export default function Home() {
   };
 
   return (
-    <div className="atlas-shell">
+    <div className="atlas-shell" lang={locale}>
       <header className="topbar">
-        <a href="#top" className="brand" aria-label="KNIGA · Architecture Models Atlas home">
-          <span className="brand-mark"><img src="/manus-storage/atlas-mark_d0d985a0.png" alt="" /></span>
-          <span className="brand-copy"><strong className="brand-ozco">KNIGA · ARCHITECTURE MODELS ATLAS</strong><em className="brand-computation">BOOK · VAOS KNOWLEGE</em></span>
+        <a href="#top" className="brand" aria-label="KNIGA in OZCO · Architecture Models Atlas home">
+          <span className="brand-mark"><img src="/manus-storage/ozco-logo_0a14a0f7.png" alt="OZCO" /></span>
+          <span className="brand-copy"><strong className="brand-ozco">KNIGA</strong><em className="brand-computation">in OZCO</em></span>
         </a>
-        <div className="topbar-meta"><span className="eyebrow">OZCO · Usan VA</span></div>
+        <div className="topbar-meta"><span className="topbar-title">Architecture models atlas</span><span className="topbar-subtitle">Book · VAOS Knowlege</span></div>
         <div className="topbar-actions">
+          <span className="topbar-author">OZCO · Usan VA</span>
+          <div className="language-toggle" role="group" aria-label={copy.language}>
+            <Languages size={14} aria-hidden="true" />
+            {(["en", "ru"] as const).map((option) => <button key={option} type="button" className={locale === option ? "active" : ""} onClick={() => setLocale(option)} aria-pressed={locale === option}>{option.toUpperCase()}</button>)}
+          </div>
           <button className="icon-button mobile-menu" onClick={() => setMobileNav((value) => !value)} aria-label="Toggle navigation"><Menu size={18} /></button>
-          <button className="text-button" onClick={downloadAtlas}><Download size={16} /> Save atlas</button>
-          <button className="text-button primary" onClick={sharePage}>{copied ? <Check size={16} /> : <Share2 size={16} />} {copied ? "Copied" : "Share"}</button>
+          <button className="text-button" onClick={downloadAtlas}><Download size={16} /> {copy.save}</button>
+          <button className="text-button primary" onClick={sharePage}>{copied ? <Check size={16} /> : <Share2 size={16} />} {copied ? copy.copied : copy.share}</button>
         </div>
       </header>
 
