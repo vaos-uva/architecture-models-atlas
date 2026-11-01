@@ -14,10 +14,11 @@ This queue follows [`docs/agent/task-methodology.md`](../agent/task-methodology.
 - [x] Define the foundation-first agent task methodology.
 - [x] Define the OZCO multilingual normal form contract.
 - [x] Add deterministic validation and normalization helpers.
-- [ ] Add architecture-owned term instances and a reversible legacy adapter.
+- [x] Add architecture-owned term instances and a reversible legacy adapter.
 - [ ] Compare canonical terms against all existing concept and registry records.
 - [ ] Reorganize source/model/view files by ownership with no-data-loss evidence.
-- [ ] Build locale-aware KNIGA projections from canonical records.
+- [x] Build locale-aware KNIGA projections for glossary and registry names.
+- [ ] Extend locale projections to descriptions, navigation, and source labels.
 - [ ] Add export schema/version metadata and round-trip tests.
 
 ## Later product slices

@@ -48,10 +48,11 @@ import {
 } from "@/components/architecture/instances/architecture-specification-registry";
 import type { StoredAtlasFile } from "@/components/kniga/data/definitions";
 import { getCatalogStats } from "@/components/architecture/models/architecture-taxonomy";
-import type { Edition, GeneralizedNode, MetamodelMapping, RegistrySortDirection, RegistrySortKey } from "@/components/architecture/definitions";
+import type { Concept, Edition, GeneralizedNode, MetamodelMapping, RegistrySortDirection, RegistrySortKey } from "@/components/architecture/definitions";
 import {
   archiMateLayers, architectureRoleLenses, artifactExamples, c4Levels, chartData, concepts, dragon1Packages, editions, frameworkMetamodelMappings, generalizedLevels, generalizedNodes, generalizedRelations, mappingRows, mdaStages, modelTheoryLenses, mofLayers, togafContentObjects, togafSteps, xmiSteps,
 } from "@/components/kniga/data/atlas-content";
+import { projectArchitectureRegistry, projectConcepts } from "@/components/kniga/data/locale-projections";
 
 function encodeBytes(bytes: Uint8Array) {
   let binary = "";
@@ -99,9 +100,9 @@ function scrollToId(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-function MapNode({ id, selected, onSelect }: { id: string; selected: string; onSelect: (id: string) => void }) {
+function MapNode({ id, selected, onSelect, conceptCatalog }: { id: string; selected: string; onSelect: (id: string) => void; conceptCatalog: readonly Concept[] }) {
   const p = nodePositions[id];
-  const concept = concepts.find((item) => item.id === id);
+  const concept = conceptCatalog.find((item) => item.id === id);
   if (!p || !concept) return null;
   const isSelected = selected === id;
   return (
@@ -147,6 +148,8 @@ export default function Home() {
   const copy = uiText[locale];
 
   const taxonomyStats = useMemo(() => getCatalogStats(), []);
+  const localizedConcepts = useMemo(() => projectConcepts(locale), [locale]);
+  const localizedRegistry = useMemo(() => projectArchitectureRegistry(locale), [locale]);
 
   useEffect(() => {
     fetch("/api/files", { credentials: "include" })
@@ -201,7 +204,7 @@ export default function Home() {
     }
   };
 
-  const selected = concepts.find((concept) => concept.id === selectedId) ?? concepts[3];
+  const selected = localizedConcepts.find((concept) => concept.id === selectedId) ?? localizedConcepts[3];
   const selectedC4Level = c4Levels.find((level) => level.id === selectedC4) ?? c4Levels[0];
   const selectedMofLayer = mofLayers.find((layer) => layer.id === selectedMof) ?? mofLayers[0];
   const selectedTogafStep = togafSteps.find((step) => step.id === selectedTogaf) ?? togafSteps[0];
@@ -214,12 +217,12 @@ export default function Home() {
   const visibleGeneralizedNodes = generalizedNodes.filter((node) => node.level === selectedGeneralizedLevel);
   const selectedArtifactExample = artifactExamples.find((artifact) => artifact.id === selectedArtifact) ?? artifactExamples[0];
   const selectedXmiStep = xmiSteps.find((step) => step.id === xmiStep) ?? xmiSteps[0];
-  const registryTypes = useMemo(() => Array.from(new Set(architectureSpecificationRegistry.map((specification) => specification.kind))).sort(), []);
-  const registryVersions = useMemo(() => Array.from(new Set(architectureSpecificationRegistry.map((specification) => specification.version))).sort(), []);
-  const registryTags = useMemo(() => Array.from(new Set(architectureSpecificationRegistry.flatMap((specification) => specification.tags))).sort(), []);
+  const registryTypes = useMemo(() => Array.from(new Set(localizedRegistry.map((specification) => specification.kind))).sort(), [localizedRegistry]);
+  const registryVersions = useMemo(() => Array.from(new Set(localizedRegistry.map((specification) => specification.version))).sort(), [localizedRegistry]);
+  const registryTags = useMemo(() => Array.from(new Set(localizedRegistry.flatMap((specification) => specification.tags))).sort(), [localizedRegistry]);
   const filteredRegistry = useMemo(() => {
     const needle = registrySearch.trim().toLowerCase();
-    const rows = architectureSpecificationRegistry.filter((specification) => {
+    const rows = localizedRegistry.filter((specification) => {
       const metadataSearch = Object.entries(specification.metadata ?? {}).flatMap(([key, value]) => [key, ...metadataValueParts(value)]).join(" ");
       const searchable = `${specification.name} ${specification.acronym} ${specification.kind} ${specification.version} ${specification.primaryQuestion} ${specification.abstraction} ${specification.primaryArtifact} ${specification.interoperability} ${specification.tags.join(" ")} ${metadataSearch}`.toLowerCase();
       return (!needle || searchable.includes(needle)) && (registryType === "all" || specification.kind === registryType) && (registryVersion === "all" || specification.version === registryVersion) && (registryTag === "all" || specification.tags.includes(registryTag));
@@ -230,17 +233,17 @@ export default function Home() {
       const comparison = String(left).localeCompare(String(right), undefined, { numeric: true, sensitivity: "base" });
       return registrySort.direction === "asc" ? comparison : -comparison;
     });
-  }, [registrySearch, registrySort, registryTag, registryType, registryVersion]);
+  }, [localizedRegistry, registrySearch, registrySort, registryTag, registryType, registryVersion]);
   const selectedMetamodelMappings = selectedSpecification ? frameworkMetamodelMappings[selectedSpecification.id] ?? [] : [];
   const filteredConcepts = useMemo(() => {
     const needle = search.trim().toLowerCase();
-    if (!needle) return concepts;
-    return concepts.filter((concept) => `${concept.name} ${concept.short} ${concept.detail} ${concept.category}`.toLowerCase().includes(needle));
-  }, [search]);
+    if (!needle) return localizedConcepts;
+    return localizedConcepts.filter((concept) => `${concept.name} ${concept.short} ${concept.detail} ${concept.category}`.toLowerCase().includes(needle));
+  }, [localizedConcepts, search]);
 
   const selectConcept = (id: string) => {
     setSelectedId(id);
-    const concept = concepts.find((item) => item.id === id);
+    const concept = localizedConcepts.find((item) => item.id === id);
     if (concept?.anchor) scrollToId(concept.anchor);
   };
 
@@ -337,7 +340,7 @@ export default function Home() {
 
           <section className="stat-strip" aria-label="Atlas at a glance">
             <div><span className="stat-value">{String(architectureSpecificationCount).padStart(2, "0")}</span><span className="stat-label">architecture specs registered</span></div>
-            <div><span className="stat-value">{String(concepts.length).padStart(2, "0")}</span><span className="stat-label">named concepts in current atlas</span></div>
+            <div><span className="stat-value">{String(localizedConcepts.length).padStart(2, "0")}</span><span className="stat-label">named concepts in current atlas</span></div>
             <div><span className="stat-value">03</span><span className="stat-label">enterprise architecture additions</span></div>
             <div><span className="stat-value accent">∞</span><span className="stat-label">ways to assemble an AD</span></div>
           </section>
@@ -347,7 +350,7 @@ export default function Home() {
             <div className="context-grid">
               <div className="context-art"><img src="/manus-storage/architecture-map_f06cf696.jpg" alt="Abstract editorial systems map with connected nodes and tracing paper layers" /><div className="art-caption">A model is never just a diagram. It is a deliberate cut through a wider field of influence.</div></div>
               <div className="context-notes">
-                {concepts.filter((concept) => concept.category === "Context").map((concept, index) => <button className={`note-card ${selectedId === concept.id ? "selected" : ""}`} key={concept.id} onClick={() => setSelectedId(concept.id)}><span className="note-index">0{index + 1}</span><span><strong>{concept.name}</strong><small>{concept.short}</small></span><ChevronRight size={17} /></button>)}
+                {localizedConcepts.filter((concept) => concept.category === "Context").map((concept, index) => <button className={`note-card ${selectedId === concept.id ? "selected" : ""}`} key={concept.id} onClick={() => setSelectedId(concept.id)}><span className="note-index">0{index + 1}</span><span><strong>{concept.name}</strong><small>{concept.short}</small></span><ChevronRight size={17} /></button>)}
                 <blockquote>“Fundamental concepts or properties of a system in its environment…”<cite>— definition of architecture, ISO/IEC/IEEE 42010:2011</cite></blockquote>
               </div>
             </div>
@@ -364,7 +367,7 @@ export default function Home() {
                 </g>
                 <g className="map-links rust-links" fill="none" stroke="#c65d3a" strokeWidth="1.6" strokeDasharray="5 5" markerEnd="url(#arrow-rust)"><path d="M358 244 L190 194" /><path d="M798 288 L758 424" /><path d="M452 275 L798 288" /></g>
                 <g className="map-labels"><text x="310" y="105">is situated in</text><text x="508" y="105">has</text><text x="342" y="151">expresses</text><text x="336" y="258">frames</text><text x="220" y="350">holds</text><text x="510" y="365">governs</text><text x="736" y="365">reflected in</text><text x="778" y="230" className="rust-label">2022 trace</text></g>
-                {Object.keys(nodePositions).map((id) => <MapNode key={id} id={id} selected={selectedId} onSelect={selectConcept} />)}
+                {Object.keys(nodePositions).map((id) => <MapNode key={id} id={id} selected={selectedId} onSelect={selectConcept} conceptCatalog={localizedConcepts} />)}
               </svg>
               <div className="selection-drawer"><div><span className="drawer-label">SELECTED CONCEPT</span><h3>{selected.name}</h3><p>{selected.detail}</p></div><div className="drawer-meta"><span>{selected.category}</span><span>{selected.edition}</span><button onClick={() => scrollToId("explorer")}>Open in explorer <ArrowUpRight size={14} /></button></div></div>
             </div>

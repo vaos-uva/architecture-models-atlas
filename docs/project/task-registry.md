@@ -24,9 +24,9 @@ This registry is a placeholder index for active and upcoming work on the KNIGA A
 |---|---|---:|---:|---|---|
 | FOUND-001 | Methodology | Active | P0 | Adopt foundation-first agent task roadmap | Definitions → model → contracts → migration → projections → views → validation |
 | FOUND-002 | Language model | Active | P0 | Define OZCO multilingual normal form | `termsExpressions`, ASCII alphanumeric code, `eng`, `rus`, explicit provenance |
-| FOUND-003 | Architecture model | Planned | P0 | Add architecture-owned term instances and legacy adapter | Preserve existing IDs, labels, sources, and export keys |
+| FOUND-003 | Architecture model | Complete | P0 | Add architecture-owned term instances and legacy adapter | Preserve existing IDs, labels, sources, and export keys |
 | FOUND-004 | Structure | Planned | P0 | Reorganize model/source/view files by ownership | Use `git mv`; no root clutter or dependency inversion |
-| FOUND-005 | KNIGA projections | Planned | P1 | Build locale-aware projections from canonical data | Do not duplicate semantic content in JSX |
+| FOUND-005 | KNIGA projections | Active | P1 | Build locale-aware projections from canonical data | Glossary and registry names now project from canonical terms |
 | PROD-001 | Product identity | Planned | P0 | Finalize public product promise | Need clear audience-first framing |
 | PROD-002 | Messaging | Planned | P0 | Define homepage narrative | Keep atlas identity intact |
 | UX-001 | Onboarding | Planned | P1 | Create learner pathway | High-value user entry |
