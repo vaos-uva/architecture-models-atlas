@@ -12,19 +12,21 @@ universe: kniga -->
 Every user-facing research term or expression is represented as:
 
 ```ts
-type AtlasTerm = {
-  code: string;          // immutable ASCII alphanumeric identity
-  display: string;       // preferred display expression
-  expressions: string[]; // aliases and source spellings
-  english: string;
-  russian: string;
-  provenance: "source" | "translation" | "editorial" | "synthesis";
-  source?: string;       // source-record ID, not a free-form citation
-  edition?: string;      // preserved verbatim
+type MultilingualNormalForm = {
+  termsExpressions: readonly string[]; // ordered aliases/source spellings
+  asciiAlphanumericCode: string;        // immutable identity: [A-Za-z0-9]+
+  eng: string;                         // explicit English value
+  rus: string;                         // explicit Russian value
+};
+
+type MultilingualTermRecord = MultilingualNormalForm & {
+  provenance: "source-quoted" | "source-paraphrase" | "normalized" | "translated" | "editorial" | "derived" | "interpretive-bridge" | "unverified" | "deprecated";
+  sourceId?: string;
+  edition?: string;                    // preserved verbatim
 };
 ```
 
-`code` is identity. Labels, translations, editions, and source spellings are not identity. Existing kebab-case IDs remain valid legacy IDs and are mapped additively; they are not silently renamed.
+`asciiAlphanumericCode` is identity. Labels, translations, editions, and source spellings are not identity. Existing kebab-case IDs remain valid legacy IDs and are mapped additively; they are not silently renamed. The executable contract lives in `client/src/components/ozco/abstract/foundation/multilingual.ts`.
 
 ## Model and view
 

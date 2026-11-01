@@ -7,24 +7,28 @@ universe: kniga -->
 
 # Next tasks
 
-This is the immediate placeholder list for the next implementation cycle.
+This queue follows [`docs/agent/task-methodology.md`](../agent/task-methodology.md). Foundation tasks must reach their gates before broad visual or content expansion.
 
-## Immediate queue
+## Immediate foundation queue
 
-- [ ] Finalize the product sentence and public positioning.
-- [ ] Rewrite homepage copy to reflect the atlas promise clearly.
-- [ ] Define audience-specific entry paths.
-- [ ] Build a compact task registry and backlog workflow.
-- [ ] Create a first launch-ready checklist for product validation.
+- [x] Define the foundation-first agent task methodology.
+- [x] Define the OZCO multilingual normal form contract.
+- [x] Add deterministic validation and normalization helpers.
+- [ ] Add architecture-owned term instances and a reversible legacy adapter.
+- [ ] Compare canonical terms against all existing concept and registry records.
+- [ ] Reorganize source/model/view files by ownership with no-data-loss evidence.
+- [ ] Build locale-aware KNIGA projections from canonical records.
+- [ ] Add export schema/version metadata and round-trip tests.
 
-## Placeholder follow-up tasks
+## Later product slices
 
+- [ ] Migrate the glossary view.
+- [ ] Migrate registry and comparison views.
+- [ ] Add Russian/English navigation and section copy.
 - [ ] Add onboarding guidance for first-time users.
-- [ ] Add comparison-centric entry states.
-- [ ] Improve search and concept discovery.
 - [ ] Assess accessibility and mobile polish.
 - [ ] Review launch readiness and release evidence.
 
 ## Purpose
 
-This file exists to keep the next work explicit without over-committing to large, unstable plans. It is meant to be replaced and expanded as the work becomes concrete.
+This file keeps the next work explicit without allowing implementation to outrun definitions and contracts. Update status only with evidence from the named validation gate.

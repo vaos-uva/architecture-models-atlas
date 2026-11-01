@@ -21,6 +21,7 @@ Use this index after reading the repository [`AGENTS.md`](../AGENTS.md). It is i
 | [`roadmap.md`](agent/roadmap.md) | You need the current KNIGA product goal, milestone order, Definition of Done, or next implementation item. |
 | [`content-style.md`](agent/content-style.md) | You need to write architecture explanations, case studies, comparisons, or source-grounded learning copy. |
 | [`foundation-governance.md`](agent/foundation-governance.md) | You need enums, concern classifiers, separation-of-concerns rules, file headers, or root-directory placement. |
+| [`task-methodology.md`](agent/task-methodology.md) | You need to frame, delegate, sequence, migrate, validate, or structurally reorganize an agent task. |
 
 ## Research notes
 
@@ -49,6 +50,7 @@ Product ideas, task lists, and decision records belong under `docs/project/`; re
 
 - **Add or compare a framework:** `client/src/components/architecture/definitions.ts` → `architecture/instances/architecture-specification-registry.ts` → KNIGA data/view → `Home.tsx` → tests → source trail/export.
 - **Add taxonomy concepts:** `client/src/components/architecture/models/architecture-taxonomy.ts` → KNIGA data/view → taxonomy UI in `Home.tsx` → stable IDs and provenance tests.
+- **Add multilingual terms:** `ozco/abstract/foundation/multilingual.ts` → `architecture/definitions/architecture-term.ts` → KNIGA instances/adapters → locale-aware projections → parity tests.
 - **Add a component:** decide OZCO-agnostic versus KNIGA product versus architecture-domain ownership before writing JSX; keep definitions, models, and instances in separate files.
 - **Modify registry interactions:** registry type/data → `Home.tsx` filters/sort/modal → registry tests → browser smoke test.
 - **Modify upload/storage:** `drizzle/schema.ts` → migration → `server/db.ts` → `server/storage.ts` / `server/index.ts` → tests → UI shelf.

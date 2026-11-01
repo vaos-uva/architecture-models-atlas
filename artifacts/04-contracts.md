@@ -9,7 +9,7 @@ universe: kniga -->
 
 ## Term contract
 
-`AtlasTerm.code` matches `/^[A-Za-z0-9]+$/`; codes are unique and immutable. `display`, `english`, and `russian` are non-empty. `expressions` is ordered and deduplicated. `provenance` is explicit. `source` references a source record; `edition` remains opaque and verbatim.
+`MultilingualNormalForm.asciiAlphanumericCode` matches `/^[A-Za-z0-9]+$/`; codes are unique and immutable. `eng` and `rus` are explicit and non-empty. `termsExpressions` is ordered and deduplicated after trimming. `provenance` is explicit. `sourceId` references a source record; `edition` remains opaque and verbatim. The normalizer never invents a missing translation.
 
 ## Compatibility contract
 
