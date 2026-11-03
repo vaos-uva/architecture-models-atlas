@@ -12,6 +12,7 @@ import { architectureTermByLegacyId } from "@/components/architecture/instances/
 import type { Concept } from "@/components/architecture/definitions";
 import { concepts } from "@/components/kniga/data/atlas-content";
 import { architectureSpecificationRegistry } from "@/components/architecture/instances/architecture-specification-registry";
+import { resolveTranslation, type TranslationResolution } from "@/components/ozco/abstract/foundation/multilingual";
 
 export type AtlasLocale = "eng" | "rus";
 export type UiLocale = "en" | "ru";
@@ -20,34 +21,55 @@ export function toAtlasLocale(locale: AtlasLocale | UiLocale): AtlasLocale {
   return locale === "ru" || locale === "rus" ? "rus" : "eng";
 }
 
-function localizedLabel(legacyId: string, locale: AtlasLocale, fallback: string): string {
+function localizedLabel(legacyId: string, locale: AtlasLocale, fallback: string): TranslationResolution {
   const term = architectureTermByLegacyId[legacyId];
-  if (!term) return fallback;
-  return locale === "rus" ? term.rus : term.eng;
+  return resolveTranslation(term, locale, fallback);
 }
+
+export type LocalizedConcept = Concept & {
+  nameResolution: TranslationResolution;
+  shortResolution: TranslationResolution;
+  detailResolution: TranslationResolution;
+};
 
 /** Additive adapter: legacy concept IDs remain the lookup key and all old fields survive. */
-export function projectConcepts(locale: AtlasLocale | UiLocale): Concept[] {
+export function projectConcepts(locale: AtlasLocale | UiLocale): LocalizedConcept[] {
   const normalizedLocale = toAtlasLocale(locale);
-  return concepts.map((concept) => ({
-    ...concept,
-    name: localizedLabel(concept.id, normalizedLocale, concept.name),
-  }));
+  return concepts.map((concept) => {
+    const nameResolution = localizedLabel(concept.id, normalizedLocale, concept.name);
+    return {
+      ...concept,
+      name: nameResolution.value || concept.name,
+      nameResolution,
+      shortResolution: resolveTranslation({ eng: concept.short, rus: "" }, normalizedLocale),
+      detailResolution: resolveTranslation({ eng: concept.detail, rus: "" }, normalizedLocale),
+    };
+  });
 }
 
+export type LocalizedArchitectureSpecification = ArchitectureSpecification & {
+  nameResolution: TranslationResolution;
+  contentResolution: TranslationResolution;
+};
+
 /** Additive adapter: registry identity, metadata, sources, and mappings remain unchanged. */
-export function projectArchitectureRegistry(locale: AtlasLocale | UiLocale): ArchitectureSpecification[] {
+export function projectArchitectureRegistry(locale: AtlasLocale | UiLocale): LocalizedArchitectureSpecification[] {
   const normalizedLocale = toAtlasLocale(locale);
-  return architectureSpecificationRegistry.map((specification) => ({
-    ...specification,
-    name: localizedLabel(specification.id, normalizedLocale, specification.name),
-  }));
+  return architectureSpecificationRegistry.map((specification) => {
+    const nameResolution = localizedLabel(specification.id, normalizedLocale, specification.name);
+    return {
+      ...specification,
+      name: nameResolution.value || specification.name,
+      nameResolution,
+      contentResolution: resolveTranslation({ eng: specification.primaryQuestion, rus: "" }, normalizedLocale),
+    };
+  });
 }
 
 export type LocaleProjection = {
   locale: AtlasLocale;
-  concepts: Concept[];
-  registry: ArchitectureSpecification[];
+  concepts: LocalizedConcept[];
+  registry: LocalizedArchitectureSpecification[];
 };
 
 export function createLocaleProjection(locale: AtlasLocale | UiLocale): LocaleProjection {

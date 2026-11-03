@@ -24,6 +24,8 @@ describe("KNIGA locale projections", () => {
     expect(russian?.name).toBe("Архитектурная точка зрения");
     expect(russian?.detail).toBe(english?.detail);
     expect(russian?.id).toBe("viewpoint");
+    expect(russian?.nameResolution.status).toBe("translated");
+    expect(russian?.detailResolution.status).toBe("fallback");
   });
 
   it("projects registry names while preserving metadata, sources, and IDs", () => {
@@ -33,6 +35,8 @@ describe("KNIGA locale projections", () => {
     expect(russian?.name).toBe("Архитектура, управляемая моделями OMG");
     expect(russian?.sources).toEqual(english?.sources);
     expect(russian?.metadata).toEqual(english?.metadata);
+    expect(russian?.nameResolution.status).toBe("translated");
+    expect(russian?.contentResolution.status).toBe("fallback");
   });
 
   it("normalizes UI locale codes once for both projections", () => {

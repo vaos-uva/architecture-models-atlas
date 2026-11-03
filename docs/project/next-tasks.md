@@ -20,6 +20,7 @@ The comprehensive sprint plan is [`multilingual-refactoring-sprint-roadmap.md`](
 - [ ] Compare canonical terms against all existing concept and registry records.
 - [ ] Reorganize source/model/view files by ownership with no-data-loss evidence.
 - [x] Build locale-aware KNIGA projections for glossary and registry names.
+- [x] Define explicit translated, English-fallback, and unavailable UI states.
 - [ ] Extend locale projections to descriptions, navigation, and source labels.
 - [ ] Add export schema/version metadata and round-trip tests.
 

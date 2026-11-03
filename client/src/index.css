@@ -398,3 +398,14 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .registry-metadata-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; }
 .registry-metadata-chips span { padding: 4px 6px; color: var(--blue); background: #e4ebf0; font: 9px "IBM Plex Mono", monospace; }
 @media (max-width: 560px) { .registry-metadata-grid { grid-template-columns: 1fr; } .registry-custom-metadata { padding: 14px; } }
+
+/* KNIGA multilingual fallback states: visible, compact, and non-blocking. */
+.translation-fallback { display: inline-flex; align-items: center; width: fit-content; margin-top: 8px; padding: 4px 7px; color: #7c4c2f; background: #f6e3d8; border: 1px solid #e6c2b2; font: 9px "IBM Plex Mono", monospace; letter-spacing: .03em; text-transform: uppercase; }
+.translation-fallback-compact { margin: 0 0 0 6px; padding: 2px 5px; vertical-align: middle; font-size: 8px; }
+.translation-fallback-unavailable { color: #7a3a3a; background: #f5dada; border-color: #e4b7b7; }
+.selection-drawer h3 .translation-fallback { transform: translateY(-2px); }
+.concept-card h3 .translation-fallback { display: inline-flex; }
+.registry-name strong .translation-fallback { display: inline-flex; }
+.registry-dialog-header h2 .translation-fallback { transform: translateY(-6px); }
+.registry-dialog-field .translation-fallback { margin-top: 0; }
+@media (prefers-reduced-motion: reduce) { .translation-fallback { transform: none !important; } }

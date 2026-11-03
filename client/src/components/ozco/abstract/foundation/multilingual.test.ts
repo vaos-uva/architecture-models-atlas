@@ -8,7 +8,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { normalizeMultilingualNormalForm, validateMultilingualNormalForm } from "./multilingual";
+import { normalizeMultilingualNormalForm, resolveTranslation, validateMultilingualNormalForm } from "./multilingual";
 
 const validTerm = {
   termsExpressions: ["Architecture View", "view"],
@@ -31,5 +31,17 @@ describe("multilingual normal form", () => {
 
   it("deduplicates expressions without changing their order or translations", () => {
     expect(normalizeMultilingualNormalForm({ ...validTerm, termsExpressions: [" Architecture View ", "view", "view"] })).toEqual(validTerm);
+  });
+
+  it("makes missing Russian content explicit instead of returning an empty string", () => {
+    expect(resolveTranslation({ eng: "Architecture Description", rus: "" }, "rus")).toEqual({
+      requestedLocale: "rus",
+      resolvedLocale: "eng",
+      status: "fallback",
+      value: "Architecture Description",
+      reason: "missing-requested-translation",
+    });
+    expect(resolveTranslation(undefined, "rus", "Legacy label").status).toBe("fallback");
+    expect(resolveTranslation(undefined, "rus").status).toBe("unavailable");
   });
 });

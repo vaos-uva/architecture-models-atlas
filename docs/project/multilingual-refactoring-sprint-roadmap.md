@@ -46,7 +46,7 @@ The sprint must improve the model without deleting, renaming, or silently transl
 - KNIGA projection modules are not yet separated into a dedicated `kniga/projection/` boundary.
 - Export payloads do not yet contain the full versioned multilingual schema promised by the contracts.
 - Import → normalize → export → re-import round-trip evidence is not yet implemented.
-- Locale-aware search indexing and fallback policy are not yet formalized.
+- Locale-aware search indexing is not yet formalized; translation fallback policy is now explicit in the multilingual contract and rendered through a reusable KNIGA notice.
 
 ## 3. Target architecture
 

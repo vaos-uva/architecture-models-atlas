@@ -43,6 +43,16 @@ export type MultilingualTermRecord = MultilingualNormalForm & {
   edition?: string;
 };
 
+export type TranslationResolutionStatus = "translated" | "fallback" | "unavailable";
+
+export type TranslationResolution = {
+  requestedLocale: SupportedLocale;
+  resolvedLocale: SupportedLocale | null;
+  status: TranslationResolutionStatus;
+  value: string;
+  reason?: "missing-canonical-term" | "missing-requested-translation" | "missing-all-values";
+};
+
 const ASCII_ALPHANUMERIC_CODE = /^[A-Za-z0-9]+$/;
 
 export type MultilingualValidationError = {
@@ -61,6 +71,35 @@ export function validateMultilingualNormalForm(term: MultilingualNormalForm): Mu
   if (!term.eng.trim()) errors.push({ field: "eng", message: "must be explicit and non-empty" });
   if (!term.rus.trim()) errors.push({ field: "rus", message: "must be explicit and non-empty" });
   return errors;
+}
+
+/**
+ * Resolve a display value without inventing a translation.
+ * Strict canonical records are preferred; partial legacy records can expose
+ * an explicit fallback state while the migration is still in progress.
+ */
+export function resolveTranslation(
+  term: Pick<MultilingualNormalForm, "eng" | "rus"> | undefined,
+  requestedLocale: SupportedLocale,
+  legacyFallback = "",
+): TranslationResolution {
+  const requestedValue = term?.[requestedLocale] ?? "";
+  if (requestedValue.trim()) {
+    return { requestedLocale, resolvedLocale: requestedLocale, status: "translated", value: requestedValue.trim() };
+  }
+
+  const englishValue = term?.eng?.trim() || legacyFallback.trim();
+  if (englishValue) {
+    return {
+      requestedLocale,
+      resolvedLocale: "eng",
+      status: "fallback",
+      value: englishValue,
+      reason: term ? "missing-requested-translation" : "missing-canonical-term",
+    };
+  }
+
+  return { requestedLocale, resolvedLocale: null, status: "unavailable", value: "", reason: "missing-all-values" };
 }
 
 /**
