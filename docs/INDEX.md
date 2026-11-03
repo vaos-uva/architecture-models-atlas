@@ -36,6 +36,7 @@ Product ideas, task lists, and decision records belong under `docs/project/`; re
 
 - [`ideas.md`](project/ideas.md) — product and visual direction history.
 - [`todo.md`](project/todo.md) — current project checklist.
+- [`multilingual-refactoring-sprint-roadmap.md`](project/multilingual-refactoring-sprint-roadmap.md) — comprehensive multilingual architecture, execution sequence, work packages, gates, risks, and Definition of Done.
 
 ## Foundation artifacts
 

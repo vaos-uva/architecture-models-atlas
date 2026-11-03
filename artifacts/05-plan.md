@@ -29,4 +29,4 @@ Parallelize only independent work. Never give two agents overlapping write owner
 
 ## First implementation slice
 
-Add `architecture/terms.ts`, a separate `architecture/models/atlas-terms.ts`, a legacy-ID mapping, validator tests, and documentation. Do not rewrite all consumers until parity is proven.
+The first slice is now implemented by `client/src/components/ozco/abstract/foundation/multilingual.ts`, `architecture/definitions/architecture-term.ts`, `architecture/instances/architecture-term-instances.ts`, and `kniga/data/locale-projections.ts`. The next slice is full parity across concepts, registry, taxonomy, mappings, and sources. Do not rewrite remaining consumers until parity is proven. The comprehensive execution plan is [`docs/project/multilingual-refactoring-sprint-roadmap.md`](../docs/project/multilingual-refactoring-sprint-roadmap.md).

@@ -9,6 +9,8 @@ universe: kniga -->
 
 This queue follows [`docs/agent/task-methodology.md`](../agent/task-methodology.md). Foundation tasks must reach their gates before broad visual or content expansion.
 
+The comprehensive sprint plan is [`multilingual-refactoring-sprint-roadmap.md`](multilingual-refactoring-sprint-roadmap.md). It is the source for work-package ownership, dependency order, evidence, and release gates.
+
 ## Immediate foundation queue
 
 - [x] Define the foundation-first agent task methodology.

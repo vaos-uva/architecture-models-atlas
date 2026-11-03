@@ -22,6 +22,7 @@ This registry is a placeholder index for active and upcoming work on the KNIGA A
 
 | ID | Area | Status | Priority | Summary | Note |
 |---|---|---:|---:|---|---|
+| SPRINT-ML-001 | Refactoring | Active | P0 | Execute the multilingual model-first refactoring sprint | Follow `multilingual-refactoring-sprint-roadmap.md`; preserve IDs, sources, mappings, exports |
 | FOUND-001 | Methodology | Active | P0 | Adopt foundation-first agent task roadmap | Definitions → model → contracts → migration → projections → views → validation |
 | FOUND-002 | Language model | Active | P0 | Define OZCO multilingual normal form | `termsExpressions`, ASCII alphanumeric code, `eng`, `rus`, explicit provenance |
 | FOUND-003 | Architecture model | Complete | P0 | Add architecture-owned term instances and legacy adapter | Preserve existing IDs, labels, sources, and export keys |
