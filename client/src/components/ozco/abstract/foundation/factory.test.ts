@@ -8,6 +8,7 @@
  */
 
 import { describe, expect, it } from "vitest";
+import { createDigitalFactoryTool } from "./digital-factory";
 import { createFactory, measure, scan } from "./factory";
 
 describe("OZCO factory tool", () => {
@@ -23,5 +24,21 @@ describe("OZCO factory tool", () => {
     expect(items.map(({ id }) => id)).toEqual(["a", "b"]);
     expect(result.value).toBe(2);
     expect(result.query).toEqual(query);
+  });
+
+  it("reuses one Digital tool for construction, scanning, and measurement", () => {
+    const tool = createDigitalFactoryTool(
+      ({ payload }) => payload,
+      (items) => items.reduce((total, { item }) => total + item.value, 0),
+      (item) => item.id,
+    );
+    const products = [
+      tool.factory.create({ kind: "Digital", payload: { id: "a", value: 2 } }),
+      tool.factory.create({ kind: "Digital", payload: { id: "b", value: 3 } }),
+    ];
+    const query = { what: "digital products", where: "fixture", how: "sum value" };
+    const scanned = tool.scan(query, products);
+    expect(scanned.map(({ id }) => id)).toEqual(["a", "b"]);
+    expect(tool.measure(query, scanned).value).toBe(5);
   });
 });

@@ -28,6 +28,9 @@ export type Factory<Product, Kind extends string = string> = {
   create(spec: Schema<Product, Kind>): Product;
 };
 
+export type DigitalSchema<Product> = Schema<Product, "Digital">;
+export type DigitalFactory<Product> = Factory<Product, "Digital">;
+
 export function createFactory<Product, Kind extends string>(
   kind: Kind,
   constructor: ProductConstructor<Product, Schema<Product, Kind>>,
@@ -38,42 +41,5 @@ export function createFactory<Product, Kind extends string>(
   };
 }
 
-/** A bounded inspection request: What, Where, and How. */
-export type InspectionQuery = {
-  what: string;
-  where: string;
-  how: string;
-};
-
-export type ScanItem<Item> = {
-  id: string;
-  item: Item;
-  query: InspectionQuery;
-};
-
-export type Scanner<Item, Source> = (query: InspectionQuery, source: Source) => ScanItem<Item>[];
-
-/** Default scanner: inspect every source item while preserving the query envelope. */
-export function scan<Item>(
-  query: InspectionQuery,
-  source: readonly Item[],
-  identify: (item: Item, index: number) => string = (_item, index) => String(index + 1),
-): ScanItem<Item>[] {
-  return source.map((item, index) => ({ id: identify(item, index), item, query }));
-}
-
-export type Measurement<Item, Value> = {
-  query: InspectionQuery;
-  value: Value;
-  items: readonly ScanItem<Item>[];
-};
-
-export type Measurer<Item, Value> = (query: InspectionQuery, items: readonly ScanItem<Item>[]) => Measurement<Item, Value>;
-
-export function measure<Item, Value>(
-  query: InspectionQuery,
-  items: readonly ScanItem<Item>[],
-  calculate: (items: readonly ScanItem<Item>[]) => Value,
-): Measurement<Item, Value> {
-  return { query, value: calculate(items), items };
-}
+export { createScanner, scan, type InspectionQuery, type ItemIdentifier, type ScanItem, type Scanner } from "./scanner";
+export { createMeasurer, measure, type Measurement, type MeasurementCalculator, type Measurer } from "./measurer";
