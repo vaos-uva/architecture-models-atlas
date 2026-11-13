@@ -52,6 +52,8 @@ Product ideas, task lists, and decision records belong under `docs/project/`; re
 - **Add or compare a framework:** `client/src/components/architecture/definitions.ts` → `architecture/instances/architecture-specification-registry.ts` → KNIGA data/view → `Home.tsx` → tests → source trail/export.
 - **Add taxonomy concepts:** `client/src/components/architecture/models/architecture-taxonomy.ts` → KNIGA data/view → taxonomy UI in `Home.tsx` → stable IDs and provenance tests.
 - **Add multilingual terms:** `ozco/abstract/foundation/multilingual.ts` → `architecture/definitions/architecture-term.ts` → KNIGA instances/adapters → locale-aware projections → parity tests.
+- **Create a factory, scanner, or measurer:** `ozco/abstract/foundation/factory.ts` → typed product contract → domain/product adapter → focused regression tests.
+- **Track translation progress:** KNIGA locale projections → `kniga/data/translation-metrics.ts` → registry metric UI → English/Russian metric tests and browser verification.
 - **Add a component:** decide OZCO-agnostic versus KNIGA product versus architecture-domain ownership before writing JSX; keep definitions, models, and instances in separate files.
 - **Modify registry interactions:** registry type/data → `Home.tsx` filters/sort/modal → registry tests → browser smoke test.
 - **Modify upload/storage:** `drizzle/schema.ts` → migration → `server/db.ts` → `server/storage.ts` / `server/index.ts` → tests → UI shelf.

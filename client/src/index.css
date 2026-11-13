@@ -409,3 +409,14 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .registry-dialog-header h2 .translation-fallback { transform: translateY(-6px); }
 .registry-dialog-field .translation-fallback { margin-top: 0; }
 @media (prefers-reduced-motion: reduce) { .translation-fallback { transform: none !important; } }
+
+/* KNIGA registry translation metric: measurable progress without changing table semantics. */
+.registry-translation-metric { display: grid; grid-template-columns: auto auto; align-items: baseline; gap: 2px 10px; min-width: 210px; padding: 9px 11px; background: #e4ebf0; border-left: 3px solid var(--blue); }
+.registry-translation-metric .eyebrow { grid-column: 1 / -1; color: var(--slate); }
+.registry-translation-metric strong { color: var(--blue); font: 500 24px "Fraunces", serif; }
+.registry-translation-metric small { color: var(--slate); font: 9px/1.35 "IBM Plex Mono", monospace; }
+.registry-translation-summary { color: var(--blue); }
+.registry-row-completeness { display: inline-flex; align-items: center; gap: 7px; min-width: 100px; margin-right: 10px; vertical-align: middle; }
+.registry-row-completeness > span { display: block; width: 60px; height: 5px; min-width: 2px; max-width: 60px; background: var(--blue); box-shadow: 60px 0 0 #d7e0e5; }
+.registry-row-completeness small { color: var(--slate); font: 9px "IBM Plex Mono", monospace; }
+@media (max-width: 700px) { .registry-card-top { align-items: flex-start; flex-direction: column; } .registry-translation-metric { width: 100%; } .registry-row-completeness { margin-bottom: 5px; } }

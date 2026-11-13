@@ -29,6 +29,8 @@ This registry is a placeholder index for active and upcoming work on the KNIGA A
 | FOUND-004 | Structure | Planned | P0 | Reorganize model/source/view files by ownership | Use `git mv`; no root clutter or dependency inversion |
 | FOUND-005 | KNIGA projections | Active | P1 | Build locale-aware projections from canonical data | Glossary and registry names now project from canonical terms |
 | FOUND-006 | Translation UX | Complete | P0 | Render explicit missing-translation fallback states | Resolution contract, accessible notice, Russian live verification, 18 tests |
+| FOUND-007 | Factory tool | Complete | P0 | Add typed `Schema → Product` factory plus scanner and measurer contracts | OZCO foundation tool; covered by factory regression tests |
+| FOUND-008 | Translation metrics | Complete | P0 | Measure registry localization progress by locale | Per-row and aggregate translated/fallback/unavailable counts with percentage |
 | PROD-001 | Product identity | Planned | P0 | Finalize public product promise | Need clear audience-first framing |
 | PROD-002 | Messaging | Planned | P0 | Define homepage narrative | Keep atlas identity intact |
 | UX-001 | Onboarding | Planned | P1 | Create learner pathway | High-value user entry |

@@ -13,6 +13,7 @@ import type { Concept } from "@/components/architecture/definitions";
 import { concepts } from "@/components/kniga/data/atlas-content";
 import { architectureSpecificationRegistry } from "@/components/architecture/instances/architecture-specification-registry";
 import { resolveTranslation, type TranslationResolution } from "@/components/ozco/abstract/foundation/multilingual";
+import { measureTranslationCompleteness, createRegistryTranslationFields, type TranslationCompletenessMetric } from "@/components/kniga/data/translation-metrics";
 
 export type AtlasLocale = "eng" | "rus";
 export type UiLocale = "en" | "ru";
@@ -50,6 +51,7 @@ export function projectConcepts(locale: AtlasLocale | UiLocale): LocalizedConcep
 export type LocalizedArchitectureSpecification = ArchitectureSpecification & {
   nameResolution: TranslationResolution;
   contentResolution: TranslationResolution;
+  translationCompleteness: TranslationCompletenessMetric;
 };
 
 /** Additive adapter: registry identity, metadata, sources, and mappings remain unchanged. */
@@ -57,11 +59,13 @@ export function projectArchitectureRegistry(locale: AtlasLocale | UiLocale): Loc
   const normalizedLocale = toAtlasLocale(locale);
   return architectureSpecificationRegistry.map((specification) => {
     const nameResolution = localizedLabel(specification.id, normalizedLocale, specification.name);
+    const contentResolution = resolveTranslation({ eng: specification.primaryQuestion, rus: "" }, normalizedLocale);
     return {
       ...specification,
       name: nameResolution.value || specification.name,
       nameResolution,
-      contentResolution: resolveTranslation({ eng: specification.primaryQuestion, rus: "" }, normalizedLocale),
+      contentResolution,
+      translationCompleteness: measureTranslationCompleteness(normalizedLocale, createRegistryTranslationFields({ id: specification.id, nameResolution, contentResolution })),
     };
   });
 }

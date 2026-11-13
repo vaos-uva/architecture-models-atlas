@@ -36,9 +36,11 @@ Browser
 
 - `Home.tsx` owns the current single-page atlas composition and local interaction state; it must not become a data registry.
 - `components/ozco/abstract/` owns brand-agnostic contracts/primitives and cannot import KNIGA or architecture data.
+- `components/ozco/abstract/foundation/factory.ts` owns the generic `Schema → Product` factory contract plus the `What / Where / How` scanner and measurer; it must remain domain- and UI-agnostic.
 - `components/kniga/data/` owns product data contracts and configuration; `structure/` owns product composition contracts; `view/` owns view contracts; `source/` owns source contracts.
 - `components/architecture/definitions.ts` owns domain types; `architecture/models/` owns taxonomy/model catalogs; `architecture/instances/` owns concrete registry rows and preserved research instances.
 - `architecture-specification-registry.ts` owns normalized framework profiles and typed custom metadata inside `architecture/instances/`.
+- `components/kniga/data/translation-metrics.ts` owns the registry localization measurement projection; it may consume localized projections but must not mutate architecture instances.
 - `architecture-taxonomy.ts` owns the preserved taxonomy catalog inside `architecture/models/`; do not prune it to simplify a UI.
 - `index.css` is the shared visual system. Extend it; do not replace it with a partial file.
 
