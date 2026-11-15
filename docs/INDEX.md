@@ -53,6 +53,7 @@ Product ideas, task lists, and decision records belong under `docs/project/`; re
 - **Add taxonomy concepts:** `client/src/components/architecture/models/architecture-taxonomy.ts` → KNIGA data/view → taxonomy UI in `Home.tsx` → stable IDs and provenance tests.
 - **Add multilingual terms:** `ozco/abstract/foundation/multilingual.ts` → `architecture/definitions/architecture-term.ts` → KNIGA instances/adapters → locale-aware projections → parity tests.
 - **Create a factory, scanner, or measurer:** `ozco/abstract/foundation/factory.ts` → typed product contract → domain/product adapter → focused regression tests.
+- **Run repeatable atlas AutoDev work:** `kniga/structure/autodev-tool.ts` → Architect/Developer/Operator work items → role scan → deterministic measure → compact brief → validation gates; reusable skill: `/home/ubuntu/skills/autodev-skill/SKILL.md`.
 - **Track translation progress:** KNIGA locale projections → `kniga/data/translation-metrics.ts` → registry metric UI → English/Russian metric tests and browser verification.
 - **Add a component:** decide OZCO-agnostic versus KNIGA product versus architecture-domain ownership before writing JSX; keep definitions, models, and instances in separate files.
 - **Modify registry interactions:** registry type/data → `Home.tsx` filters/sort/modal → registry tests → browser smoke test.

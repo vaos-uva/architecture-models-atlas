@@ -41,6 +41,7 @@ Browser
 - `components/architecture/definitions.ts` owns domain types; `architecture/models/` owns taxonomy/model catalogs; `architecture/instances/` owns concrete registry rows and preserved research instances.
 - `architecture-specification-registry.ts` owns normalized framework profiles and typed custom metadata inside `architecture/instances/`.
 - `components/kniga/data/translation-metrics.ts` owns the registry localization measurement projection; it may consume localized projections but must not mutate architecture instances.
+- `components/kniga/structure/autodev-tool.ts` owns atlas workflow orchestration: Architect, Developer, and Operator work-item configuration, role scans, deterministic completion measures, and compact execution briefs. It may compose OZCO foundation tools but must not move role logic into page renderers.
 - `architecture-taxonomy.ts` owns the preserved taxonomy catalog inside `architecture/models/`; do not prune it to simplify a UI.
 - `index.css` is the shared visual system. Extend it; do not replace it with a partial file.
 

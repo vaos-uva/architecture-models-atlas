@@ -23,6 +23,8 @@ The comprehensive sprint plan is [`multilingual-refactoring-sprint-roadmap.md`](
 - [x] Define explicit translated, English-fallback, and unavailable UI states.
 - [x] Implement the generic OZCO factory, scanner, and measurer contracts.
 - [x] Add registry translation-completeness metrics for English and Russian projections.
+- [x] Add the KNIGA AutoDev tool with Architect, Developer, and Operator role scans, deterministic measures, and compact briefs.
+- [x] Author the reusable `/home/ubuntu/skills/autodev-skill/SKILL.md` for repeatable, token-efficient atlas execution.
 - [ ] Extend locale projections to descriptions, navigation, and source labels.
 - [ ] Add export schema/version metadata and round-trip tests.
 
