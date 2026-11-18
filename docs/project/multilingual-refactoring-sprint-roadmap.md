@@ -37,6 +37,8 @@ The sprint must improve the model without deleting, renaming, or silently transl
 - KNIGA projections for localized glossary and registry names.
 - Home-page search, sorting, filters, context map, and selected-concept readout consuming localized projections.
 - Regression coverage for normal form, canonical terms, projections, IDs, sources, metadata, and details.
+- Centralized English/Russian UI copy for the top bar, navigation rail, mobile navigation, high-frequency search controls, storage feedback, and sharing/download feedback.
+- AutoDev traceability heading and accessible link titles now follow the selected UI locale.
 
 ### Remaining baseline gaps
 
@@ -47,6 +49,7 @@ The sprint must improve the model without deleting, renaming, or silently transl
 - Export payloads do not yet contain the full versioned multilingual schema promised by the contracts.
 - Import → normalize → export → re-import round-trip evidence is not yet implemented.
 - Locale-aware search indexing is not yet formalized; translation fallback policy is now explicit in the multilingual contract and rendered through a reusable KNIGA notice.
+- Framework lenses, registry metadata labels, source-trail copy, and most explanatory/editorial paragraphs remain English with explicit fallback where a reviewed Russian value is not yet available.
 
 ## 3. Target architecture
 

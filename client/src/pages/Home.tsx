@@ -55,6 +55,7 @@ import {
 } from "@/components/kniga/data/atlas-content";
 import { projectArchitectureRegistry, projectConcepts, type LocalizedArchitectureSpecification } from "@/components/kniga/data/locale-projections";
 import { formatTranslationPercentage, measureRegistryTranslationCompleteness } from "@/components/kniga/data/translation-metrics";
+import { atlasUiCopy, type AtlasUiLocale } from "@/components/kniga/data/ui-copy";
 import { TranslationFallbackNotice } from "@/components/kniga/view/TranslationFallbackNotice";
 
 function encodeBytes(bytes: Uint8Array) {
@@ -77,12 +78,7 @@ function metadataValueParts(value: string | number | boolean | readonly string[]
   return Array.isArray(value) ? value.map(String) : [String(value)];
 }
 
-type Locale = "en" | "ru";
-
-const uiText: Record<Locale, { save: string; share: string; copied: string; language: string; atlasTitle: string; heroKicker: string }> = {
-  en: { save: "Save atlas", share: "Share", copied: "Copied", language: "Language", atlasTitle: "Architecture Models Atlas", heroKicker: "A visual guide to architecture description" },
-  ru: { save: "Сохранить атлас", share: "Поделиться", copied: "Скопировано", language: "Язык", atlasTitle: "Атлас архитектурных моделей", heroKicker: "Визуальный путеводитель по описанию архитектуры" },
-};
+type Locale = AtlasUiLocale;
 
 const nodePositions: Record<string, { x: number; y: number; w: number; h: number; tone: string }> = {
   environment: { x: 346, y: 28, w: 172, h: 52, tone: "blue" },
@@ -149,7 +145,7 @@ export default function Home() {
   const [storageDescription, setStorageDescription] = useState("");
   const [storageFile, setStorageFile] = useState<File | null>(null);
   const [autoDevHistory, setAutoDevHistory] = useState<AutoDevHistoryRecord[]>([]);
-  const copy = uiText[locale];
+  const copy = atlasUiCopy[locale];
 
   const taxonomyStats = useMemo(() => getCatalogStats(), []);
   const localizedConcepts = useMemo(() => projectConcepts(locale), [locale]);
@@ -177,7 +173,7 @@ export default function Home() {
   const uploadArtifact = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!storageFile || !storageTitle.trim()) {
-      toast.info("Choose a file and add a title first");
+      toast.info(copy.chooseFileFirst);
       return;
     }
     setStorageBusy(true);
@@ -197,9 +193,9 @@ export default function Home() {
       setStorageFile(null);
       const input = event.currentTarget.elements.namedItem("atlas-file") as HTMLInputElement | null;
       if (input) input.value = "";
-      toast.success("Artifact saved to your private shelf");
+      toast.success(copy.artifactSaved);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Upload failed");
+      toast.error(error instanceof Error ? error.message : copy.uploadFailed);
     } finally {
       setStorageBusy(false);
     }
@@ -211,9 +207,9 @@ export default function Home() {
       const response = await fetch(`/api/files/${id}`, { method: "DELETE", credentials: "include" });
       if (!response.ok) throw new Error("Could not remove artifact");
       setStorageFiles((files) => files.filter((file) => file.id !== id));
-      toast.success("Artifact removed from the shelf");
+      toast.success(copy.artifactRemoved);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Delete failed");
+      toast.error(error instanceof Error ? error.message : copy.deleteFailed);
     } finally {
       setStorageBusy(false);
     }
@@ -269,10 +265,10 @@ export default function Home() {
       if (canShare) await (navigator as Navigator & { share: (data: ShareData) => Promise<void> }).share(shareData);
       else await navigator.clipboard.writeText(window.location.href);
       setCopied(true);
-      toast.success(canShare ? (locale === "ru" ? "Открыто меню публикации" : "Share sheet opened") : (locale === "ru" ? "Ссылка скопирована" : "Page link copied"));
+      toast.success(canShare ? copy.shareSheetOpened : copy.pageLinkCopied);
       window.setTimeout(() => setCopied(false), 1800);
     } catch {
-      toast.info("Sharing was cancelled");
+      toast.info(copy.sharingCancelled);
     }
   };
 
@@ -284,7 +280,7 @@ export default function Home() {
     a.download = "architecture-models-atlas.json";
     a.click();
     URL.revokeObjectURL(href);
-    toast.success("Atlas data downloaded");
+    toast.success(copy.downloadSuccess);
   };
 
   return (
@@ -301,39 +297,23 @@ export default function Home() {
             <Languages size={14} aria-hidden="true" />
             {(["en", "ru"] as const).map((option) => <button key={option} type="button" className={locale === option ? "active" : ""} onClick={() => setLocale(option)} aria-pressed={locale === option}>{option.toUpperCase()}</button>)}
           </div>
-          <button className="icon-button mobile-menu" onClick={() => setMobileNav((value) => !value)} aria-label="Toggle navigation"><Menu size={18} /></button>
+          <button className="icon-button mobile-menu" onClick={() => setMobileNav((value) => !value)} aria-label={copy.toggleNavigation}><Menu size={18} /></button>
           <button className="text-button" onClick={downloadAtlas}><Download size={16} /> {copy.save}</button>
           <button className="text-button primary" onClick={sharePage}>{copied ? <Check size={16} /> : <Share2 size={16} />} {copied ? copy.copied : copy.share}</button>
         </div>
       </header>
 
       <div className={`mobile-nav ${mobileNav ? "open" : ""}`}>
-        { ["top", "context", "core", "c4", "mof", "mda", "togaf", "archimate", "dragon1", "model-theory", "metamodel", "registry", "mapping", "changes", "sources", "storage", "autodev"].map((id) => <a key={id} href={`#${id}`} onClick={() => setMobileNav(false)}>{id === "top" ? "Overview" : id === "core" ? "Core model" : id === "c4" ? "C4 lens" : id === "mof" ? "MOF lens" : id === "mda" ? "MDA lens" : id === "togaf" ? "TOGAF" : id === "archimate" ? "ArchiMate" : id === "dragon1" ? "Dragon1" : id === "model-theory" ? "Roles + model theory" : id === "metamodel" ? "Metamodel" : id === "registry" ? "Registry" : id === "mapping" ? "Compare" : id === "changes" ? "Edition shifts" : id === "storage" ? "File Storage" : id === "autodev" ? "AutoDev" : id[0].toUpperCase() + id.slice(1)}</a>)}
+        { ["top", "context", "core", "c4", "mof", "mda", "togaf", "archimate", "dragon1", "model-theory", "metamodel", "registry", "mapping", "changes", "sources", "storage", "autodev"].map((id) => <a key={id} href={`#${id}`} onClick={() => setMobileNav(false)}>{copy.nav[id]}</a>)}
       </div>
 
       <div className="atlas-layout" id="top">
         <aside className="index-rail">
-          <div className="rail-label">CONTENTS</div>
+          <div className="rail-label">{copy.contents.toUpperCase()}</div>
           <nav>
-            <a className="rail-link active" href="#top"><span>01</span><b>Overview</b></a>
-            <a className="rail-link" href="#context"><span>02</span><b>Context</b></a>
-            <a className="rail-link" href="#core"><span>03</span><b>Core model</b></a>
-            <a className="rail-link" href="#c4"><span>04</span><b>C4 lens</b></a>
-            <a className="rail-link" href="#mof"><span>05</span><b>MOF lens</b></a>
-            <a className="rail-link" href="#mda"><span>06</span><b>MDA</b></a>
-            <a className="rail-link" href="#togaf"><span>07</span><b>TOGAF</b></a>
-            <a className="rail-link" href="#archimate"><span>08</span><b>ArchiMate</b></a>
-            <a className="rail-link" href="#dragon1"><span>09</span><b>Dragon1</b></a>
-            <a className="rail-link" href="#model-theory"><span>10</span><b>Roles + theory</b></a>
-            <a className="rail-link" href="#metamodel"><span>11</span><b>Metamodel</b></a>
-            <a className="rail-link" href="#registry"><span>12</span><b>Registry</b></a>
-            <a className="rail-link" href="#mapping"><span>13</span><b>Compare</b></a>
-            <a className="rail-link" href="#changes"><span>14</span><b>Edition shifts</b></a>
-            <a className="rail-link" href="#sources"><span>15</span><b>Sources</b></a>
-            <a className="rail-link" href="#storage"><span>16</span><b>File Storage</b></a>
-            <a className="rail-link" href="#autodev"><span>17</span><b>AutoDev</b></a>
+            {["top", "context", "core", "c4", "mof", "mda", "togaf", "archimate", "dragon1", "model-theory", "metamodel", "registry", "mapping", "changes", "sources", "storage", "autodev"].map((id, index) => <a className={`rail-link ${id === "top" ? "active" : ""}`} href={`#${id}`} key={id}><span>{String(index + 1).padStart(2, "0")}</span><b>{copy.nav[id]}</b></a>)}
           </nav>
-          <div className="rail-foot"><span className="rail-dot" />Interactive research note<br /><small>Last framed · 2022 edition</small></div>
+          <div className="rail-foot"><span className="rail-dot" />{copy.interactiveNote}<br /><small>{copy.lastFramed}</small></div>
         </aside>
 
         <main className="atlas-main">
@@ -503,7 +483,7 @@ export default function Home() {
 
           <section className="section-block registry-section" id="registry">
             <div className="section-heading"><div className="section-marker"><span>12</span><span className="marker-line" /></div><div><div className="eyebrow">ARCHITECTURE SPECIFICATION REGISTRY</div><h2>One row for every architecture lens.</h2><p className="section-intro">Search, filter, and sort the atlas’s typed index of standards, models, methods, metamodeling infrastructure, modeling languages, and the generalized synthesis. Select a row to inspect its full metamodel-oriented profile.</p></div></div>
-            <div className="registry-table-card"><div className="registry-card-top"><div><span className="eyebrow">DYNAMIC DATA TABLE</span><h3>{filteredRegistry.length} of {architectureSpecificationCount} specifications</h3></div><span className="info-pill">click a row to explore</span><div className="registry-translation-metric"><span className="eyebrow">TRANSLATION COMPLETENESS · {registryTranslationMetric.locale.toUpperCase()}</span><strong>{formatTranslationPercentage(registryTranslationMetric)}</strong><small>{registryTranslationMetric.translated} translated · {registryTranslationMetric.fallback} fallback · {registryTranslationMetric.unavailable} unavailable</small></div></div><div className="registry-controls"><label className="registry-search"><Search size={16} /><span className="sr-only">Search architecture registry</span><input value={registrySearch} onChange={(event) => setRegistrySearch(event.target.value)} placeholder="Search names, questions, artifacts, tags…" />{registrySearch && <button type="button" onClick={() => setRegistrySearch("")} aria-label="Clear registry search"><X size={14} /></button>}</label><label><span>Type</span><select value={registryType} onChange={(event) => setRegistryType(event.target.value)}><option value="all">All types</option>{registryTypes.map((type) => <option key={type} value={type}>{type.replaceAll("-", " ")}</option>)}</select></label><label><span>Version</span><select value={registryVersion} onChange={(event) => setRegistryVersion(event.target.value)}><option value="all">All versions</option>{registryVersions.map((version) => <option key={version} value={version}>{version}</option>)}</select></label><label><span>Tag</span><select value={registryTag} onChange={(event) => setRegistryTag(event.target.value)}><option value="all">All tags</option>{registryTags.map((tag) => <option key={tag} value={tag}>{tag}</option>)}</select></label><button type="button" className="registry-reset" onClick={() => { setRegistrySearch(""); setRegistryType("all"); setRegistryVersion("all"); setRegistryTag("all"); setRegistrySort({ key: "name", direction: "asc" }); }} disabled={!registrySearch && registryType === "all" && registryVersion === "all" && registryTag === "all" && registrySort.key === "name" && registrySort.direction === "asc"}><Filter size={14} /> Reset</button></div><div className="registry-filter-summary"><span><Filter size={14} /> {filteredRegistry.length} matching rows</span><span>Sort any column · press Enter on a row to inspect</span><span className="registry-translation-summary">{registryTranslationMetric.translated}/{registryTranslationMetric.total} fields translated</span></div><div className="registry-table-wrap"><table className="registry-table"><caption className="sr-only">Architecture specification registry</caption><thead><tr><th scope="col"><button type="button" className="registry-sort" onClick={() => { const direction = registrySort.key === "name" && registrySort.direction === "asc" ? "desc" : "asc"; setRegistrySort({ key: "name", direction }); }} aria-label="Sort by specification name">Specification <ArrowUpDown size={13} /></button></th><th scope="col"><button type="button" className="registry-sort" onClick={() => { const direction = registrySort.key === "kind" && registrySort.direction === "asc" ? "desc" : "asc"; setRegistrySort({ key: "kind", direction }); }} aria-label="Sort by type">Type <ArrowUpDown size={13} /></button></th><th scope="col"><button type="button" className="registry-sort" onClick={() => { const direction = registrySort.key === "version" && registrySort.direction === "asc" ? "desc" : "asc"; setRegistrySort({ key: "version", direction }); }} aria-label="Sort by version">Version <ArrowUpDown size={13} /></button></th><th scope="col"><button type="button" className="registry-sort" onClick={() => { const direction = registrySort.key === "primaryQuestion" && registrySort.direction === "asc" ? "desc" : "asc"; setRegistrySort({ key: "primaryQuestion", direction }); }} aria-label="Sort by primary question">Primary question <ArrowUpDown size={13} /></button></th><th scope="col"><button type="button" className="registry-sort" onClick={() => { const direction = registrySort.key === "abstraction" && registrySort.direction === "asc" ? "desc" : "asc"; setRegistrySort({ key: "abstraction", direction }); }} aria-label="Sort by metamodel focus">Metamodel focus <ArrowUpDown size={13} /></button></th><th scope="col"><span className="sr-only">Action</span></th></tr></thead><tbody>{filteredRegistry.length ? filteredRegistry.map((specification) => <tr key={specification.id} tabIndex={0} role="button" aria-label={`Explore ${specification.name} specification`} onClick={() => setSelectedSpecification(specification)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setSelectedSpecification(specification); } }}><td><div className="registry-name"><strong>{specification.name} <TranslationFallbackNotice resolution={specification.nameResolution} compact /></strong><span>{specification.acronym}</span></div></td><td><span className={`registry-kind registry-kind-${specification.kind}`}>{specification.kind.replaceAll("-", " ")}</span></td><td>{specification.version}</td><td className="registry-question">{specification.primaryQuestion}</td><td className="registry-abstraction"><span className="registry-row-completeness" title={`${formatTranslationPercentage(specification.translationCompleteness)} of localized fields translated`}><span style={{ width: `${specification.translationCompleteness.percentage}%` }} /><small>{formatTranslationPercentage(specification.translationCompleteness)}</small></span>{specification.abstraction}</td><td><ChevronRight size={16} /></td></tr>) : <tr className="registry-empty"><td colSpan={6}><strong>No registry rows match these filters.</strong><span>Try clearing a filter or searching for another framework, artifact, or tag.</span></td></tr>}</tbody></table></div></div>
+            <div className="registry-table-card"><div className="registry-card-top"><div><span className="eyebrow">DYNAMIC DATA TABLE</span><h3>{filteredRegistry.length} of {architectureSpecificationCount} specifications</h3></div><span className="info-pill">click a row to explore</span><div className="registry-translation-metric"><span className="eyebrow">TRANSLATION COMPLETENESS · {registryTranslationMetric.locale.toUpperCase()}</span><strong>{formatTranslationPercentage(registryTranslationMetric)}</strong><small>{registryTranslationMetric.translated} translated · {registryTranslationMetric.fallback} fallback · {registryTranslationMetric.unavailable} unavailable</small></div></div><div className="registry-controls"><label className="registry-search"><Search size={16} /><span className="sr-only">Search architecture registry</span><input value={registrySearch} onChange={(event) => setRegistrySearch(event.target.value)} placeholder={copy.searchRegistry} />{registrySearch && <button type="button" onClick={() => setRegistrySearch("")} aria-label={copy.clearRegistrySearch}><X size={14} /></button>}</label><label><span>Type</span><select value={registryType} onChange={(event) => setRegistryType(event.target.value)}><option value="all">All types</option>{registryTypes.map((type) => <option key={type} value={type}>{type.replaceAll("-", " ")}</option>)}</select></label><label><span>Version</span><select value={registryVersion} onChange={(event) => setRegistryVersion(event.target.value)}><option value="all">All versions</option>{registryVersions.map((version) => <option key={version} value={version}>{version}</option>)}</select></label><label><span>Tag</span><select value={registryTag} onChange={(event) => setRegistryTag(event.target.value)}><option value="all">All tags</option>{registryTags.map((tag) => <option key={tag} value={tag}>{tag}</option>)}</select></label><button type="button" className="registry-reset" onClick={() => { setRegistrySearch(""); setRegistryType("all"); setRegistryVersion("all"); setRegistryTag("all"); setRegistrySort({ key: "name", direction: "asc" }); }} disabled={!registrySearch && registryType === "all" && registryVersion === "all" && registryTag === "all" && registrySort.key === "name" && registrySort.direction === "asc"}><Filter size={14} /> Reset</button></div><div className="registry-filter-summary"><span><Filter size={14} /> {filteredRegistry.length} matching rows</span><span>Sort any column · press Enter on a row to inspect</span><span className="registry-translation-summary">{registryTranslationMetric.translated}/{registryTranslationMetric.total} fields translated</span></div><div className="registry-table-wrap"><table className="registry-table"><caption className="sr-only">Architecture specification registry</caption><thead><tr><th scope="col"><button type="button" className="registry-sort" onClick={() => { const direction = registrySort.key === "name" && registrySort.direction === "asc" ? "desc" : "asc"; setRegistrySort({ key: "name", direction }); }} aria-label="Sort by specification name">Specification <ArrowUpDown size={13} /></button></th><th scope="col"><button type="button" className="registry-sort" onClick={() => { const direction = registrySort.key === "kind" && registrySort.direction === "asc" ? "desc" : "asc"; setRegistrySort({ key: "kind", direction }); }} aria-label="Sort by type">Type <ArrowUpDown size={13} /></button></th><th scope="col"><button type="button" className="registry-sort" onClick={() => { const direction = registrySort.key === "version" && registrySort.direction === "asc" ? "desc" : "asc"; setRegistrySort({ key: "version", direction }); }} aria-label="Sort by version">Version <ArrowUpDown size={13} /></button></th><th scope="col"><button type="button" className="registry-sort" onClick={() => { const direction = registrySort.key === "primaryQuestion" && registrySort.direction === "asc" ? "desc" : "asc"; setRegistrySort({ key: "primaryQuestion", direction }); }} aria-label="Sort by primary question">Primary question <ArrowUpDown size={13} /></button></th><th scope="col"><button type="button" className="registry-sort" onClick={() => { const direction = registrySort.key === "abstraction" && registrySort.direction === "asc" ? "desc" : "asc"; setRegistrySort({ key: "abstraction", direction }); }} aria-label="Sort by metamodel focus">Metamodel focus <ArrowUpDown size={13} /></button></th><th scope="col"><span className="sr-only">Action</span></th></tr></thead><tbody>{filteredRegistry.length ? filteredRegistry.map((specification) => <tr key={specification.id} tabIndex={0} role="button" aria-label={`Explore ${specification.name} specification`} onClick={() => setSelectedSpecification(specification)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setSelectedSpecification(specification); } }}><td><div className="registry-name"><strong>{specification.name} <TranslationFallbackNotice resolution={specification.nameResolution} compact /></strong><span>{specification.acronym}</span></div></td><td><span className={`registry-kind registry-kind-${specification.kind}`}>{specification.kind.replaceAll("-", " ")}</span></td><td>{specification.version}</td><td className="registry-question">{specification.primaryQuestion}</td><td className="registry-abstraction"><span className="registry-row-completeness" title={`${formatTranslationPercentage(specification.translationCompleteness)} of localized fields translated`}><span style={{ width: `${specification.translationCompleteness.percentage}%` }} /><small>{formatTranslationPercentage(specification.translationCompleteness)}</small></span>{specification.abstraction}</td><td><ChevronRight size={16} /></td></tr>) : <tr className="registry-empty"><td colSpan={6}><strong>No registry rows match these filters.</strong><span>Try clearing a filter or searching for another framework, artifact, or tag.</span></td></tr>}</tbody></table></div></div>
           </section>
 
           <section className="section-block mapping-section" id="mapping">
@@ -514,7 +494,7 @@ export default function Home() {
           </section>
 
           <section className="section-block explorer-section" id="explorer">
-            <div className="explorer-top"><div className="section-heading compact"><div className="section-marker"><span>08A</span><span className="marker-line" /></div><div><div className="eyebrow">CONCEPT EXPLORER</div><h2>Build your own glossary.</h2></div></div><div className="search-wrap"><Search size={17} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Find a concept…" aria-label="Find a concept" />{search && <button onClick={() => setSearch("")} aria-label="Clear search"><X size={15} /></button>}</div></div>
+            <div className="explorer-top"><div className="section-heading compact"><div className="section-marker"><span>08A</span><span className="marker-line" /></div><div><div className="eyebrow">CONCEPT EXPLORER</div><h2>Build your own glossary.</h2></div></div><div className="search-wrap"><Search size={17} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={copy.searchConcept} aria-label={copy.searchConcept} />{search && <button onClick={() => setSearch("")} aria-label="Clear search"><X size={15} /></button>}</div></div>
             <div className="filter-row"><span><Filter size={14} /> {filteredConcepts.length} concepts surfaced</span><span>Click any card for a closer read</span></div>
             <div className="concept-grid">{filteredConcepts.map((concept) => <button className={`concept-card ${selectedId === concept.id ? "selected" : ""}`} key={concept.id} onClick={() => setSelectedId(concept.id)}><div className="concept-card-top"><span className="category-tag">{concept.category}</span><span className="concept-edition">{concept.edition}</span></div><h3>{concept.name} <TranslationFallbackNotice resolution={concept.nameResolution} compact /></h3><p>{concept.short}</p><span className="concept-read">Inspect <ChevronRight size={14} /></span></button>)}</div>
           </section>
