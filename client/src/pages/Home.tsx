@@ -46,6 +46,8 @@ import {
   architectureSpecificationRegistry,
 } from "@/components/architecture/instances/architecture-specification-registry";
 import type { StoredAtlasFile } from "@/components/kniga/data/definitions";
+import { AutoDevDashboard } from "@/components/kniga/view/AutoDevDashboard";
+import { atlasAutoDevItems, readAutoDevHistory, seedAutoDevHistory, writeAutoDevHistory, type AutoDevHistoryRecord } from "@/components/kniga/structure/autodev-history";
 import { getCatalogStats } from "@/components/architecture/models/architecture-taxonomy";
 import type { Concept, Edition, GeneralizedNode, MetamodelMapping, RegistrySortDirection, RegistrySortKey } from "@/components/architecture/definitions";
 import {
@@ -146,6 +148,7 @@ export default function Home() {
   const [storageTitle, setStorageTitle] = useState("");
   const [storageDescription, setStorageDescription] = useState("");
   const [storageFile, setStorageFile] = useState<File | null>(null);
+  const [autoDevHistory, setAutoDevHistory] = useState<AutoDevHistoryRecord[]>([]);
   const copy = uiText[locale];
 
   const taxonomyStats = useMemo(() => getCatalogStats(), []);
@@ -162,6 +165,13 @@ export default function Home() {
       .then((files) => setStorageFiles(files))
       .catch(() => setStorageFiles([]))
       .finally(() => setStorageLoading(false));
+  }, []);
+
+  useEffect(() => {
+    const stored = readAutoDevHistory(window.localStorage);
+    const records = stored.length ? stored : seedAutoDevHistory(atlasAutoDevItems);
+    setAutoDevHistory(records);
+    if (!stored.length) writeAutoDevHistory(window.localStorage, records);
   }, []);
 
   const uploadArtifact = async (event: FormEvent<HTMLFormElement>) => {
@@ -298,7 +308,7 @@ export default function Home() {
       </header>
 
       <div className={`mobile-nav ${mobileNav ? "open" : ""}`}>
-        { ["top", "context", "core", "c4", "mof", "mda", "togaf", "archimate", "dragon1", "model-theory", "metamodel", "registry", "mapping", "changes", "sources", "storage"].map((id) => <a key={id} href={`#${id}`} onClick={() => setMobileNav(false)}>{id === "top" ? "Overview" : id === "core" ? "Core model" : id === "c4" ? "C4 lens" : id === "mof" ? "MOF lens" : id === "mda" ? "MDA lens" : id === "togaf" ? "TOGAF" : id === "archimate" ? "ArchiMate" : id === "dragon1" ? "Dragon1" : id === "model-theory" ? "Roles + model theory" : id === "metamodel" ? "Metamodel" : id === "registry" ? "Registry" : id === "mapping" ? "Compare" : id === "changes" ? "Edition shifts" : id === "storage" ? "File Storage" : id[0].toUpperCase() + id.slice(1)}</a>)}
+        { ["top", "context", "core", "c4", "mof", "mda", "togaf", "archimate", "dragon1", "model-theory", "metamodel", "registry", "mapping", "changes", "sources", "storage", "autodev"].map((id) => <a key={id} href={`#${id}`} onClick={() => setMobileNav(false)}>{id === "top" ? "Overview" : id === "core" ? "Core model" : id === "c4" ? "C4 lens" : id === "mof" ? "MOF lens" : id === "mda" ? "MDA lens" : id === "togaf" ? "TOGAF" : id === "archimate" ? "ArchiMate" : id === "dragon1" ? "Dragon1" : id === "model-theory" ? "Roles + model theory" : id === "metamodel" ? "Metamodel" : id === "registry" ? "Registry" : id === "mapping" ? "Compare" : id === "changes" ? "Edition shifts" : id === "storage" ? "File Storage" : id === "autodev" ? "AutoDev" : id[0].toUpperCase() + id.slice(1)}</a>)}
       </div>
 
       <div className="atlas-layout" id="top">
@@ -321,6 +331,7 @@ export default function Home() {
             <a className="rail-link" href="#changes"><span>14</span><b>Edition shifts</b></a>
             <a className="rail-link" href="#sources"><span>15</span><b>Sources</b></a>
             <a className="rail-link" href="#storage"><span>16</span><b>File Storage</b></a>
+            <a className="rail-link" href="#autodev"><span>17</span><b>AutoDev</b></a>
           </nav>
           <div className="rail-foot"><span className="rail-dot" />Interactive research note<br /><small>Last framed · 2022 edition</small></div>
         </aside>
@@ -541,6 +552,8 @@ export default function Home() {
               <div className="storage-list"><div className="storage-list-head"><span className="eyebrow">SAVED ARTIFACTS</span><span>{storageLoading ? "Loading…" : `${storageFiles.length} saved`}</span></div>{!storageLoading && storageFiles.length === 0 ? <p className="storage-empty">No artifacts yet. Save a model file or a small decision record to start your shelf.</p> : storageFiles.map((file) => <div className="storage-file" key={file.id}><div className="storage-file-copy"><a href={file.url} target="_blank" rel="noreferrer"><strong>{file.title}</strong><ExternalLink size={13} /></a><span>{file.fileName} · {formatFileSize(file.sizeBytes)} · {new Date(file.createdAt).toLocaleDateString()}</span>{file.description && <small>{file.description}</small>}</div><button className="storage-remove" type="button" onClick={() => removeArtifact(file.id)} disabled={storageBusy}>Remove</button></div>)}</div>
             </div>
           </section>
+
+          <AutoDevDashboard locale={locale} items={atlasAutoDevItems} history={autoDevHistory} />
 
 
           <Dialog open={Boolean(selectedSpecification)} onOpenChange={(open) => { if (!open) setSelectedSpecification(null); }}>

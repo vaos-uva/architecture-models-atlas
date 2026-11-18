@@ -24,7 +24,18 @@ export type AutoDevWorkItem = {
   status: AutoDevStatus;
   query: InspectionQuery;
   acceptance: readonly string[];
+  registryIds: readonly string[];
+  roadmapIds: readonly string[];
   dependsOn?: readonly string[];
+};
+
+export type AutoDevExecutionEvidence = {
+  id: string;
+  workItemId: string;
+  status: "passed" | "failed" | "observed";
+  summary: string;
+  command?: string;
+  recordedAt: string;
 };
 
 export type AutoDevRoleMetric = {
@@ -72,7 +83,7 @@ function metric(role: AutoDevRole | "all", items: readonly AutoDevWorkItem[]): A
  * the same execution brief without duplicating task meaning in a renderer.
  */
 export function createAtlasAutoDevTool(config: AutoDevToolConfig): AutoDevTool {
-  const source = config.items.map((item) => ({ ...item, acceptance: [...item.acceptance], dependsOn: item.dependsOn ? [...item.dependsOn] : undefined }));
+  const source = config.items.map((item) => ({ ...item, acceptance: [...item.acceptance], registryIds: [...item.registryIds], roadmapIds: [...item.roadmapIds], dependsOn: item.dependsOn ? [...item.dependsOn] : undefined }));
   const productTool = createDigitalFactoryTool<AutoDevWorkItem, AutoDevRoleMetric>(
     ({ payload }) => payload,
     (items) => metric("all", items.map(({ item }) => item)),
@@ -83,7 +94,7 @@ export function createAtlasAutoDevTool(config: AutoDevToolConfig): AutoDevTool {
   const create = (item: Omit<AutoDevWorkItem, "status"> & { status?: AutoDevStatus }): AutoDevWorkItem =>
     productTool.factory.create({
       kind: "Digital",
-      payload: { ...item, status: item.status ?? "planned", query: item.query ?? defaultQuery },
+      payload: { ...item, status: item.status ?? "planned", query: item.query ?? defaultQuery, registryIds: [...item.registryIds], roadmapIds: [...item.roadmapIds] },
     });
 
   const scan = (role?: AutoDevRole): AutoDevWorkItem[] => {

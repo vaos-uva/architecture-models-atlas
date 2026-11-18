@@ -13,9 +13,9 @@ import { createAtlasAutoDevTool, type AutoDevWorkItem } from "./autodev-tool";
 const query = { what: "atlas change", where: "registry", how: "validate then release" };
 
 const items: AutoDevWorkItem[] = [
-  { id: "model-1", role: "architect", title: "Freeze model contract", objective: "Define stable inputs", status: "done", query, acceptance: ["typed"] },
-  { id: "dev-1", role: "developer", title: "Implement projection", objective: "Build adapter", status: "ready", query, acceptance: ["tested"], dependsOn: ["model-1"] },
-  { id: "op-1", role: "operator", title: "Run release gate", objective: "Verify evidence", status: "blocked", query, acceptance: ["reported"] },
+  { id: "model-1", role: "architect", title: "Freeze model contract", objective: "Define stable inputs", status: "done", query, acceptance: ["typed"], registryIds: ["iso-42010"], roadmapIds: ["FOUND-002"] },
+  { id: "dev-1", role: "developer", title: "Implement projection", objective: "Build adapter", status: "ready", query, acceptance: ["tested"], registryIds: ["omg-mda"], roadmapIds: ["FOUND-007"], dependsOn: ["model-1"] },
+  { id: "op-1", role: "operator", title: "Run release gate", objective: "Verify evidence", status: "blocked", query, acceptance: ["reported"], registryIds: ["omg-mda"], roadmapIds: ["SPRINT-ML-001"] },
 ];
 
 describe("KNIGA AutoDev tool", () => {
@@ -34,7 +34,7 @@ describe("KNIGA AutoDev tool", () => {
 
   it("creates a planned item and emits a compact repeatable brief", () => {
     const tool = createAtlasAutoDevTool({ items, defaultQuery: query });
-    const created = tool.create({ id: "new-1", role: "developer", title: "Add tests", objective: "Protect behavior", acceptance: ["green"] });
+    const created = tool.create({ id: "new-1", role: "developer", title: "Add tests", objective: "Protect behavior", acceptance: ["green"], registryIds: ["omg-mda"], roadmapIds: ["FOUND-007"] });
     expect(created.status).toBe("planned");
     expect(created.query).toEqual(query);
     expect(tool.brief("developer")).toBe("developer: dev-1 [ready] Implement projection");
