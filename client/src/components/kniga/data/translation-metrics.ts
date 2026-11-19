@@ -31,6 +31,9 @@ export type RegistryTranslationRecord = {
   id: string;
   nameResolution: TranslationResolution;
   contentResolution: TranslationResolution;
+  abstractionResolution?: TranslationResolution;
+  primaryArtifactResolution?: TranslationResolution;
+  interoperabilityResolution?: TranslationResolution;
 };
 
 const translationMetricFactory = createFactory<TranslationCompletenessMetric, "Digital">(
@@ -49,10 +52,14 @@ function statusCount(items: readonly ScanItem<TranslationMetricField>[], status:
 }
 
 export function createRegistryTranslationFields(record: RegistryTranslationRecord): TranslationMetricField[] {
-  return [
+  const fields = [
     { id: `${record.id}:name`, label: "name", resolution: record.nameResolution },
     { id: `${record.id}:primaryQuestion`, label: "primary question", resolution: record.contentResolution },
   ];
+  if (record.abstractionResolution) fields.push({ id: `${record.id}:abstraction`, label: "abstraction", resolution: record.abstractionResolution });
+  if (record.primaryArtifactResolution) fields.push({ id: `${record.id}:primaryArtifact`, label: "primary artifact", resolution: record.primaryArtifactResolution });
+  if (record.interoperabilityResolution) fields.push({ id: `${record.id}:interoperability`, label: "interoperability", resolution: record.interoperabilityResolution });
+  return fields;
 }
 
 export function measureTranslationCompleteness(

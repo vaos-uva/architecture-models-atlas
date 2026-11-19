@@ -36,7 +36,10 @@ describe("KNIGA locale projections", () => {
     expect(russian?.sources).toEqual(english?.sources);
     expect(russian?.metadata).toEqual(english?.metadata);
     expect(russian?.nameResolution.status).toBe("translated");
-    expect(russian?.contentResolution.status).toBe("fallback");
+    expect(russian?.primaryQuestion).toContain("устойчивость моделей");
+    expect(russian?.abstractionResolution.status).toBe("translated");
+    expect(russian?.primaryArtifactResolution.status).toBe("translated");
+    expect(russian?.interoperabilityResolution.status).toBe("translated");
   });
 
   it("normalizes UI locale codes once for both projections", () => {

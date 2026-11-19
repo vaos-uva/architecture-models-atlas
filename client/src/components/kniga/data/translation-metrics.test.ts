@@ -17,12 +17,12 @@ describe("KNIGA translation completeness", () => {
     const metric = measureRegistryTranslationCompleteness("rus", registry);
 
     expect(metric.scope).toBe("architecture-specification-registry");
-    expect(metric.total).toBe(registry.length * 2);
+    expect(metric.total).toBe(registry.length * 5);
     expect(metric.translated).toBeGreaterThan(0);
-    expect(metric.fallback).toBeGreaterThan(0);
+    expect(metric.fallback).toBe(0);
     expect(metric.unavailable).toBe(0);
     expect(metric.percentage).toBe(Math.round((metric.translated / metric.total) * 100));
-    expect(registry.find((row) => row.id === "omg-mda")?.primaryQuestion).toContain("models");
+    expect(registry.find((row) => row.id === "omg-mda")?.primaryQuestion).toContain("моделей");
   });
 
   it("reports complete English registry coverage", () => {

@@ -37,6 +37,7 @@ export const architectureSpecificationRegistry: ArchitectureSpecification[] = [
     ],
     tags: ["architecture-description", "stakeholders", "concerns", "viewpoints", "views", "traceability"],
     metadata: { evidenceLevel: "normative", governanceScope: "architecture-description", stageGates: ["define", "frame", "describe", "trace"] },
+    translations: { rus: { primaryQuestion: "Что должно выражать описание архитектуры и зачем?", abstraction: "Сущность интереса, архитектура, заинтересованные стороны, интересы, точки зрения, представления, компоненты представления, аспекты и обоснование.", primaryArtifact: "Описание архитектуры (AD) и управляемые им представления.", interoperability: "Соответствия, правила соответствий, точки зрения, виды моделей и трассируемость между элементами AD." } },
   },
   {
     id: "c4-model",
@@ -56,6 +57,7 @@ export const architectureSpecificationRegistry: ArchitectureSpecification[] = [
     ],
     tags: ["software-architecture", "system-context", "container", "component", "code", "diagramming"],
     metadata: { evidenceLevel: "method-guidance", governanceScope: "software-architecture", stageGates: ["context", "container", "component", "code"] },
+    translations: { rus: { primaryQuestion: "Какую часть программной архитектуры должна увидеть эта аудитория?", abstraction: "Программная система, контейнер, компонент и уровень кода.", primaryArtifact: "Иерархические диаграммы программной архитектуры и поддерживающие представления.", interoperability: "Независимость от нотации и инструментов; обмен зависит от выбранных средств диаграммирования или моделирования." } },
   },
   {
     id: "omg-mof",
@@ -75,6 +77,7 @@ export const architectureSpecificationRegistry: ArchitectureSpecification[] = [
     ],
     tags: ["metamodeling", "mof", "xmi", "interchange", "transformation", "mda"],
     metadata: { evidenceLevel: "normative", governanceScope: "metamodeling-and-interchange", stageGates: ["define", "conform", "exchange"] },
+    translations: { rus: { primaryQuestion: "Какой язык определяет модель и как артефакт может взаимодействовать с другими?", abstraction: "Метаметамодель, метамодель, пользовательская модель и экземпляры/реальность.", primaryArtifact: "Метамодели на основе MOF, модели, репозитории, преобразования и артефакты обмена.", interoperability: "Сериализация XMI, соответствие, идентичность объектов, репозитории и преобразование моделей." } },
   },
   {
     id: "omg-mda",
@@ -96,6 +99,7 @@ export const architectureSpecificationRegistry: ArchitectureSpecification[] = [
     ],
     tags: ["model-driven", "mda", "pim", "psm", "transformation", "platform-independence", "mof", "uml", "xmi", "interoperability"],
     metadata: { evidenceLevel: "official-omg-architecture", governanceScope: "model-driven-development-and-interoperability", stageGates: ["frame", "model", "map", "transform", "exchange", "realize"] },
+    translations: { rus: { primaryQuestion: "Как сохранить устойчивость моделей при изменении платформ и реализаций?", abstraction: "Вычислительно-независимые, платформенно-независимые и платформенно-зависимые модели, соединённые отображениями и преобразованиями.", primaryArtifact: "Модели на основе MOF, отображения PIM/PSM, артефакты обмена XMI и рабочие реализации.", interoperability: "Языки на основе MOF, UML, XMI, репозитории, отображения и преобразования поддерживают переносимость и взаимодействие между платформами." } },
   },
   {
     id: "togaf-standard",
@@ -118,6 +122,7 @@ export const architectureSpecificationRegistry: ArchitectureSpecification[] = [
     ],
     tags: ["enterprise-architecture", "adm", "governance", "roadmap", "migration", "capability"],
     metadata: { evidenceLevel: "method-guidance", governanceScope: "enterprise-architecture", stageGates: ["vision", "govern", "change"] },
+    translations: { rus: { primaryQuestion: "Как разрабатывать, управлять и изменять архитектуру предприятия?", abstraction: "Архитектурная способность, фазы ADM, доменные архитектуры, результаты работы, управление и циклы изменений.", primaryArtifact: "Видение архитектуры, доменные архитектуры, дорожные карты, контракты, результаты управления и планы миграции.", interoperability: "Настраиваемый метод, управление, метамодель содержания и Series Guides согласуют архитектурную работу в разных контекстах." } },
   },
   {
     id: "archimate-language",
@@ -138,6 +143,7 @@ export const architectureSpecificationRegistry: ArchitectureSpecification[] = [
     ],
     tags: ["enterprise-architecture", "modeling-language", "metamodel", "viewpoints", "layers", "exchange"],
     metadata: { evidenceLevel: "language-specification", governanceScope: "enterprise-modeling", stageGates: ["model", "view", "exchange"] },
+    translations: { rus: { primaryQuestion: "Какой язык выражает отношения между доменами предприятия?", abstraction: "Мотивация, стратегия, бизнес, приложение, технология, физический слой и элементы реализации/миграции.", primaryArtifact: "Модели ArchiMate, отношения, точки зрения, диаграммы и файлы обмена.", interoperability: "Формат обмена моделями ArchiMate The Open Group поддерживает обмен между совместимыми инструментами." } },
   },
   {
     id: "dragon1-ea-metamodel",
@@ -159,6 +165,7 @@ export const architectureSpecificationRegistry: ArchitectureSpecification[] = [
     ],
     tags: ["enterprise-architecture", "metamodel", "modeling-language", "concepts", "elements", "components", "reference-model", "visualization"],
     metadata: { evidenceLevel: "open-method-specification", governanceScope: "enterprise-architecture-modeling", stageGates: ["define", "structure", "visualize", "realize"] },
+    translations: { rus: { primaryQuestion: "Как понятия, сущности и отношения архитектуры предприятия образуют согласованный язык моделирования?", abstraction: "Метаметамодель, метамодель, модель и модель экземпляров для архитектуры, структуры предприятия, стратегии, преобразований, заинтересованных сторон и реализации.", primaryArtifact: "Метамодель архитектуры предприятия, эталонные модели, представления, визуализации и обмениваемые архитектурные модели.", interoperability: "Классы сущностей, атрибуты, отношения, состояния, символы, ограничения моделирования и правила расширения образуют общий понятийный язык." } },
   },
   {
     id: "generalized-architecture-metamodel",
@@ -181,6 +188,7 @@ export const architectureSpecificationRegistry: ArchitectureSpecification[] = [
     ],
     tags: ["architecture", "components", "elements", "relationships", "views", "cross-framework"],
     metadata: { evidenceLevel: "atlas-synthesis", governanceScope: "cross-framework", stageGates: ["research", "map", "validate"] },
+    translations: { rus: { primaryQuestion: "Как архитектура, компоненты и элементы могут разделять повторно используемый словарь?", abstraction: "Архитектура как целое; компоненты как значимые части; элементы как атомарные понятия и типизированные отношения.", primaryArtifact: "Кросс-фреймворковый словарь архитектуры с трассируемыми отношениями, представлениями и артефактами.", interoperability: "Связывает архитектурные понятия с ISO 42010, C4, MOF, TOGAF и ArchiMate, не утверждая нормативную эквивалентность." } },
   },
 ];
 

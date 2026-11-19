@@ -66,6 +66,18 @@ export type ArchitectureSpecificationStatus = "current" | "historical" | "atlas-
 export type ArchitectureSpecificationMetadataValue = string | number | boolean | readonly string[];
 export type ArchitectureSpecificationMetadata = Readonly<Record<string, ArchitectureSpecificationMetadataValue>>;
 
+export type ArchitectureSpecificationLocalizedContent = Readonly<{
+  primaryQuestion: string;
+  abstraction: string;
+  primaryArtifact: string;
+  interoperability: string;
+}>;
+
+export type ArchitectureSpecificationTranslations = Readonly<{
+  eng?: ArchitectureSpecificationLocalizedContent;
+  rus?: ArchitectureSpecificationLocalizedContent;
+}>;
+
 export type ArchitectureSpecification = {
   /** Stable machine-readable identifier. */
   id: string;
@@ -95,6 +107,8 @@ export type ArchitectureSpecification = {
   tags: readonly string[];
   /** Optional framework-specific metadata rendered as labeled detail fields. */
   metadata?: ArchitectureSpecificationMetadata;
+  /** Additive reviewed locale content; the English fields above remain the source-compatible legacy form. */
+  translations?: ArchitectureSpecificationTranslations;
 };
 
 /** Backward-compatible name for callers that model a specification as a component. */

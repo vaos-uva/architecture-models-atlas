@@ -294,7 +294,7 @@ The exact source and mapping types must be adopted from the existing contracts b
 
 **Gate:** the same record set, sort order semantics, mapping endpoints, and source URLs exist in both locales.
 
-**Progress note (2026-11-19):** The UI-copy portion is complete for the registry and comparison surfaces. Remaining WP-06 work is canonical localization of registry names, questions, abstractions, artifacts, metadata values, relationship labels, comparison rows, and export/source projections; current English source-backed content remains visible through the explicit fallback policy.
+**Progress note (2026-11-19):** The registry’s eight canonical rows now carry reviewed Russian questions, abstractions, primary artifacts, and interoperability descriptions through additive `translations` fields. The locale projection measures all five registry fields, and all 52 canonical relationship labels have Russian projections while preserving target IDs, tones, and English detail fallbacks. The header language control now exposes an explicit active locale with visual and accessible indicators. Remaining WP-06 work is localization of metadata values, comparison rows, and export/source projections.
 
 ### WP-07 — Navigation and source-trail migration
 

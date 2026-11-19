@@ -51,9 +51,9 @@ import { atlasAutoDevItems, readAutoDevHistory, seedAutoDevHistory, writeAutoDev
 import { getCatalogStats } from "@/components/architecture/models/architecture-taxonomy";
 import type { Concept, Edition, GeneralizedNode, MetamodelMapping, RegistrySortDirection, RegistrySortKey } from "@/components/architecture/definitions";
 import {
-  archiMateLayers, architectureRoleLenses, artifactExamples, c4Levels, chartData, concepts, dragon1Packages, editions, frameworkMetamodelMappings, generalizedLevels, generalizedNodes, generalizedRelations, mappingRows, mdaStages, modelTheoryLenses, mofLayers, togafContentObjects, togafSteps, xmiSteps,
+  archiMateLayers, architectureRoleLenses, artifactExamples, c4Levels, chartData, concepts, dragon1Packages, editions, generalizedLevels, generalizedNodes, generalizedRelations, mappingRows, mdaStages, modelTheoryLenses, mofLayers, togafContentObjects, togafSteps, xmiSteps,
 } from "@/components/kniga/data/atlas-content";
-import { projectArchitectureRegistry, projectConcepts, type LocalizedArchitectureSpecification } from "@/components/kniga/data/locale-projections";
+import { projectArchitectureRegistry, projectConcepts, projectFrameworkMetamodelMappings, type LocalizedArchitectureSpecification } from "@/components/kniga/data/locale-projections";
 import { formatTranslationPercentage, measureRegistryTranslationCompleteness } from "@/components/kniga/data/translation-metrics";
 import { atlasUiCopy, type AtlasUiLocale } from "@/components/kniga/data/ui-copy";
 import { TranslationFallbackNotice } from "@/components/kniga/view/TranslationFallbackNotice";
@@ -152,6 +152,7 @@ export default function Home() {
   const taxonomyStats = useMemo(() => getCatalogStats(), []);
   const localizedConcepts = useMemo(() => projectConcepts(locale), [locale]);
   const localizedRegistry = useMemo(() => projectArchitectureRegistry(locale), [locale]);
+  const localizedFrameworkMappings = useMemo(() => projectFrameworkMetamodelMappings(locale), [locale]);
   const registryTranslationMetric = useMemo(() => measureRegistryTranslationCompleteness(
     locale === "ru" ? "rus" : "eng",
     localizedRegistry,
@@ -247,7 +248,7 @@ export default function Home() {
       return registrySort.direction === "asc" ? comparison : -comparison;
     });
   }, [localizedRegistry, registrySearch, registrySort, registryTag, registryType, registryVersion]);
-  const selectedMetamodelMappings = selectedSpecification ? frameworkMetamodelMappings[selectedSpecification.id] ?? [] : [];
+  const selectedMetamodelMappings = selectedSpecification ? localizedFrameworkMappings[selectedSpecification.id] ?? [] : [];
   const filteredConcepts = useMemo(() => {
     const needle = search.trim().toLowerCase();
     if (!needle) return localizedConcepts;
@@ -297,7 +298,8 @@ export default function Home() {
           <span className="topbar-author">OZCO · Usan VA</span>
           <div className="language-toggle" role="group" aria-label={copy.language}>
             <Languages size={14} aria-hidden="true" />
-            {(["en", "ru"] as const).map((option) => <button key={option} type="button" className={locale === option ? "active" : ""} onClick={() => setLocale(option)} aria-pressed={locale === option}>{option.toUpperCase()}</button>)}
+            <span className="language-toggle-label">{copy.language}</span>
+            {(["en", "ru"] as const).map((option) => <button key={option} type="button" className={locale === option ? "active" : ""} onClick={() => setLocale(option)} aria-pressed={locale === option} aria-label={option === "en" ? "English" : "Русский"}><span className="language-option-dot" aria-hidden="true" />{option.toUpperCase()}</button>)}
           </div>
           <button className="icon-button mobile-menu" onClick={() => setMobileNav((value) => !value)} aria-label={copy.toggleNavigation}><Menu size={18} /></button>
           <button className="text-button" onClick={downloadAtlas}><Download size={16} /> {copy.save}</button>
@@ -553,7 +555,7 @@ export default function Home() {
                   <div className="registry-dialog-field registry-dialog-wide"><span className="eyebrow">{registryCopy.interoperability}</span><p>{selectedSpecification.interoperability}</p></div>
                 </div>
                 {selectedSpecification.metadata && Object.keys(selectedSpecification.metadata).length > 0 && <div className="registry-custom-metadata"><div className="registry-map-heading"><div><span className="eyebrow">{registryCopy.customMetadata}</span><h3>{registryCopy.frameworkSignals}</h3></div><span className="info-pill">{Object.keys(selectedSpecification.metadata).length} {registryCopy.fields}</span></div><div className="registry-metadata-grid">{Object.entries(selectedSpecification.metadata).map(([key, value]) => { const parts = metadataValueParts(value); const isList = Array.isArray(value); return <div className="registry-metadata-field" key={key}><span className="eyebrow">{formatMetadataLabel(key)}</span>{isList ? <div className="registry-metadata-chips">{parts.map((part) => <span key={part}>{part}</span>)}</div> : <p>{parts[0]}</p>}</div>; })}</div></div>}
-                <div className="registry-metamodel-map"><div className="registry-map-heading"><div><span className="eyebrow">{registryCopy.metamodelMap}</span><h3>{registryCopy.howConnects}</h3></div><span className="info-pill">{selectedMetamodelMappings.length} {registryCopy.relationships}</span></div><div className="registry-map-origin"><span className="registry-map-node-label">{registryCopy.selectedFramework}</span><strong>{selectedSpecification.acronym}</strong><small>{(registryCopy.kindLabels[selectedSpecification.kind] ?? selectedSpecification.kind.replaceAll("-", " "))}</small></div><div className="registry-map-links">{selectedMetamodelMappings.map((mapping) => { const target = architectureSpecificationRegistry.find((specification) => specification.id === mapping.targetId); return target ? <div className={`registry-map-link registry-map-link-${mapping.tone}`} key={mapping.targetId}><div className="registry-map-line"><span className="registry-map-arrow">→</span><span className="registry-map-relation">{mapping.relation}</span><strong>{target.acronym}</strong></div><p>{mapping.detail}</p></div> : null; })}</div></div>
+            <div className="registry-metamodel-map"><div className="registry-map-heading"><div><span className="eyebrow">{registryCopy.metamodelMap}</span><h3>{registryCopy.howConnects}</h3></div><span className="info-pill">{selectedMetamodelMappings.length} {registryCopy.relationships}</span></div><div className="registry-map-origin"><span className="registry-map-node-label">{registryCopy.selectedFramework}</span><strong>{selectedSpecification.acronym}</strong><small>{(registryCopy.kindLabels[selectedSpecification.kind] ?? selectedSpecification.kind.replaceAll("-", " "))}</small></div><div className="registry-map-links">{selectedMetamodelMappings.map((mapping) => { const target = localizedRegistry.find((specification) => specification.id === mapping.targetId); return target ? <div className={`registry-map-link registry-map-link-${mapping.tone}`} key={mapping.targetId}><div className="registry-map-line"><span className="registry-map-arrow">→</span><span className="registry-map-relation">{mapping.relation}</span><strong>{target.acronym}</strong></div><p>{mapping.detail}</p></div> : null; })}</div></div>
                 <div className="registry-dialog-bottom"><div><span className="eyebrow">{registryCopy.tags}</span><div className="registry-tags">{selectedSpecification.tags.map((tag) => <span key={tag}>{tag}</span>)}</div></div><div><span className="eyebrow">{registryCopy.sourceTrail}</span><div className="registry-sources">{selectedSpecification.sources.map((source) => <a key={source} href={source} target="_blank" rel="noreferrer">{new URL(source).hostname.replace("www.", "")} <ExternalLink size={12} /></a>)}</div></div></div>
                 <div className="registry-dialog-footer"><span>{registryCopy.registryId} · {selectedSpecification.id}</span><button className="text-button primary" onClick={() => { setSelectedSpecification(null); scrollToId(selectedSpecification.atlasAnchor); }}>{registryCopy.openAtlasLens} <ArrowUpRight size={15} /></button></div>
               </>}
