@@ -39,6 +39,7 @@ The sprint must improve the model without deleting, renaming, or silently transl
 - Regression coverage for normal form, canonical terms, projections, IDs, sources, metadata, and details.
 - Centralized English/Russian UI copy for the top bar, navigation rail, mobile navigation, high-frequency search controls, storage feedback, and sharing/download feedback.
 - AutoDev traceability heading and accessible link titles now follow the selected UI locale.
+- Registry and comparison controls now use centralized English/Russian copy for headings, counts, filters, sort labels, accessibility names, modal metadata, kind/status labels, mapping headings, artifact-desk labels, and the XMI walkthrough.
 
 ### Remaining baseline gaps
 
@@ -292,6 +293,8 @@ The exact source and mapping types must be adopted from the existing contracts b
 5. Verify modal details, source trails, exports, and deep links in both locales.
 
 **Gate:** the same record set, sort order semantics, mapping endpoints, and source URLs exist in both locales.
+
+**Progress note (2026-11-19):** The UI-copy portion is complete for the registry and comparison surfaces. Remaining WP-06 work is canonical localization of registry names, questions, abstractions, artifacts, metadata values, relationship labels, comparison rows, and export/source projections; current English source-backed content remains visible through the explicit fallback policy.
 
 ### WP-07 — Navigation and source-trail migration
 

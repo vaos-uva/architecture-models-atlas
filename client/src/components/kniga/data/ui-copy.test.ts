@@ -26,4 +26,14 @@ describe("atlas UI copy", () => {
     expect(atlasUiCopy.en.chooseFileFirst).not.toBe(atlasUiCopy.ru.chooseFileFirst);
     expect(atlasUiCopy.en.toggleNavigation).not.toBe(atlasUiCopy.ru.toggleNavigation);
   });
+
+  it("keeps registry and comparison label shapes aligned across locales", () => {
+    expect(Object.keys(atlasUiCopy.en.registry)).toEqual(Object.keys(atlasUiCopy.ru.registry));
+    expect(Object.keys(atlasUiCopy.en.mapping.headers)).toEqual(Object.keys(atlasUiCopy.ru.mapping.headers));
+    expect(atlasUiCopy.en.registry.primaryQuestion).not.toBe(atlasUiCopy.ru.registry.primaryQuestion);
+    expect(atlasUiCopy.en.mapping.compareBy).not.toBe(atlasUiCopy.ru.mapping.compareBy);
+    expect(atlasUiCopy.en.registry.kindLabels).toHaveProperty("model");
+    expect(atlasUiCopy.ru.registry.kindLabels.model).toBe("модель");
+    expect(atlasUiCopy.en.mapping.xmiEyebrow).not.toBe(atlasUiCopy.ru.mapping.xmiEyebrow);
+  });
 });

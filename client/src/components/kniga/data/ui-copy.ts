@@ -9,42 +9,45 @@
 
 export type AtlasUiLocale = "en" | "ru";
 
+type RegistryUiCopy = {
+  sectionEyebrow: string; title: string; intro: string; dynamicTable: string; clickToExplore: string;
+  translationCompleteness: string; translated: string; fallback: string; unavailable: string;
+  specifications: string; fieldsTranslated: string; relationships: string; tags: string; exploreSpecification: string;
+  kindLabels: Record<string, string>; statusLabels: Record<string, string>;
+  searchLabel: string; type: string; allTypes: string; version: string; allVersions: string; tag: string; allTags: string;
+  matchingRows: string; sortHint: string; specification: string; primaryQuestion: string; metamodelFocus: string;
+  noMatches: string; tryClearing: string; sortBySpecification: string; sortByType: string; sortByVersion: string;
+  sortByQuestion: string; sortByFocus: string; action: string; profile: string; abstraction: string; primaryArtifact: string;
+  interoperability: string; customMetadata: string; frameworkSignals: string; fields: string; metamodelMap: string;
+  howConnects: string; selectedFramework: string; sourceTrail: string; registryId: string; openAtlasLens: string;
+};
+
+type MappingUiCopy = {
+  eyebrow: string; title: string; intro: string; compareBy: string;
+  artifactDesk: string; artifactDeskTitle: string; illustrativeExamples: string; xmiEyebrow: string; xmiTitle: string; simplifiedFlow: string; xmiFoot: string;
+  headers: { iso: string; c4: string; mof: string; togaf: string; archimate: string; dragon1: string; mda: string };
+};
+
 export type AtlasUiCopy = {
-  save: string;
-  share: string;
-  copied: string;
-  language: string;
-  atlasTitle: string;
-  heroKicker: string;
-  contents: string;
-  interactiveNote: string;
-  lastFramed: string;
-  toggleNavigation: string;
-  nav: Record<string, string>;
-  searchConcept: string;
-  searchRegistry: string;
-  clearRegistrySearch: string;
-  reset: string;
-  matchingRows: string;
-  sortHint: string;
-  downloadSuccess: string;
-  shareSheetOpened: string;
-  pageLinkCopied: string;
-  sharingCancelled: string;
-  chooseFileFirst: string;
-  artifactSaved: string;
-  uploadFailed: string;
-  artifactRemoved: string;
-  deleteFailed: string;
+  save: string; share: string; copied: string; language: string; atlasTitle: string; heroKicker: string;
+  contents: string; interactiveNote: string; lastFramed: string; toggleNavigation: string; nav: Record<string, string>;
+  searchConcept: string; clearSearch: string; searchRegistry: string; clearRegistrySearch: string; reset: string;
+  matchingRows: string; sortHint: string; downloadSuccess: string; shareSheetOpened: string; pageLinkCopied: string;
+  sharingCancelled: string; chooseFileFirst: string; artifactSaved: string; uploadFailed: string; artifactRemoved: string;
+  deleteFailed: string; registry: RegistryUiCopy; mapping: MappingUiCopy;
 };
 
 export const atlasUiCopy: Record<AtlasUiLocale, AtlasUiCopy> = {
   en: {
-    save: "Save atlas", share: "Share", copied: "Copied", language: "Language", atlasTitle: "Architecture Models Atlas", heroKicker: "A visual guide to architecture description", contents: "Contents", interactiveNote: "Interactive research note", lastFramed: "Last framed · 2022 edition", toggleNavigation: "Toggle navigation", searchConcept: "Find a concept…", searchRegistry: "Search names, questions, artifacts, tags…", clearRegistrySearch: "Clear registry search", reset: "Reset", matchingRows: "matching rows", sortHint: "Sort any column · press Enter on a row to inspect", downloadSuccess: "Atlas data downloaded", shareSheetOpened: "Share sheet opened", pageLinkCopied: "Page link copied", sharingCancelled: "Sharing was cancelled", chooseFileFirst: "Choose a file and add a title first", artifactSaved: "Artifact saved to your private shelf", uploadFailed: "Upload failed", artifactRemoved: "Artifact removed from the shelf", deleteFailed: "Delete failed",
+    save: "Save atlas", share: "Share", copied: "Copied", language: "Language", atlasTitle: "Architecture Models Atlas", heroKicker: "A visual guide to architecture description", contents: "Contents", interactiveNote: "Interactive research note", lastFramed: "Last framed · 2022 edition", toggleNavigation: "Toggle navigation", searchConcept: "Find a concept…", clearSearch: "Clear search", searchRegistry: "Search names, questions, artifacts, tags…", clearRegistrySearch: "Clear registry search", reset: "Reset", matchingRows: "matching rows", sortHint: "Sort any column · press Enter on a row to inspect", downloadSuccess: "Atlas data downloaded", shareSheetOpened: "Share sheet opened", pageLinkCopied: "Page link copied", sharingCancelled: "Sharing was cancelled", chooseFileFirst: "Choose a file and add a title first", artifactSaved: "Artifact saved to your private shelf", uploadFailed: "Upload failed", artifactRemoved: "Artifact removed from the shelf", deleteFailed: "Delete failed",
     nav: { top: "Overview", context: "Context", core: "Core model", c4: "C4 lens", mof: "MOF lens", mda: "MDA", togaf: "TOGAF", archimate: "ArchiMate", dragon1: "Dragon1", "model-theory": "Roles + theory", metamodel: "Metamodel", registry: "Registry", mapping: "Compare", changes: "Edition shifts", sources: "Sources", storage: "File Storage", autodev: "AutoDev" },
+    registry: { sectionEyebrow: "ARCHITECTURE SPECIFICATION REGISTRY", title: "One row for every architecture lens.", intro: "Search, filter, and sort the atlas’s typed index of standards, models, methods, metamodeling infrastructure, modeling languages, and the generalized synthesis. Select a row to inspect its full metamodel-oriented profile.", dynamicTable: "DYNAMIC DATA TABLE", clickToExplore: "Click a row to explore", translationCompleteness: "TRANSLATION COMPLETENESS", translated: "translated", fallback: "fallback", unavailable: "unavailable", specifications: "specifications", fieldsTranslated: "fields translated", relationships: "relationships", tags: "TAGS", exploreSpecification: "Explore specification", kindLabels: { standard: "standard", model: "model", method: "method", "modeling-language": "modeling language", "metamodeling-facility": "metamodeling facility" }, statusLabels: { current: "current", historical: "historical", illustrative: "illustrative" }, searchLabel: "Search architecture registry", type: "Type", allTypes: "All types", version: "Version", allVersions: "All versions", tag: "Tag", allTags: "All tags", matchingRows: "matching rows", sortHint: "Sort any column · press Enter on a row to inspect", specification: "Specification", primaryQuestion: "Primary question", metamodelFocus: "Metamodel focus", noMatches: "No registry rows match these filters.", tryClearing: "Try clearing a filter or searching for another framework, artifact, or tag.", sortBySpecification: "Sort by specification name", sortByType: "Sort by type", sortByVersion: "Sort by version", sortByQuestion: "Sort by primary question", sortByFocus: "Sort by metamodel focus", action: "Action", profile: "SPECIFICATION PROFILE", abstraction: "ABSTRACTION / METAMODEL", primaryArtifact: "PRIMARY ARTIFACT", interoperability: "INTEROPERABILITY / CONFORMANCE", customMetadata: "CUSTOM METADATA", frameworkSignals: "Framework-specific signals.", fields: "fields", metamodelMap: "FRAMEWORK-TO-FRAMEWORK METAMODEL MAP", howConnects: "How this lens connects.", selectedFramework: "SELECTED FRAMEWORK", sourceTrail: "SOURCE TRAIL", registryId: "Registry ID", openAtlasLens: "Open atlas lens" },
+    mapping: { eyebrow: "CROSS-MODEL MAPPING", title: "Seven lenses. One architecture conversation.", intro: "ISO 42010 governs why an architecture is described; C4 chooses a software zoom; MOF explains metamodeling and exchange; TOGAF structures enterprise architecture work; ArchiMate supplies a cross-domain modeling language; Dragon1 supplies an enterprise concept and realization vocabulary; MDA supplies transformation architecture.", compareBy: "Compare by", artifactDesk: "ARTIFACT DESK", artifactDeskTitle: "See the model and the language behind it.", illustrativeExamples: "illustrative examples", xmiEyebrow: "XMI EXCHANGE WALKTHROUGH", xmiTitle: "From a model on one desk to an artifact another tool can read.", simplifiedFlow: "simplified teaching flow", xmiFoot: "XMI is the exchange representation; MOF and the source metamodel supply the meaning of the objects being exchanged.", headers: { iso: "Architecture description", c4: "Software architecture zoom", mof: "Metamodeling infrastructure", togaf: "EA method & governance", archimate: "EA modeling language", dragon1: "EA metamodel & language", mda: "Transformation architecture" } },
   },
   ru: {
-    save: "Сохранить атлас", share: "Поделиться", copied: "Скопировано", language: "Язык", atlasTitle: "Атлас архитектурных моделей", heroKicker: "Визуальный путеводитель по описанию архитектуры", contents: "Содержание", interactiveNote: "Интерактивная исследовательская заметка", lastFramed: "Последняя рамка · редакция 2022", toggleNavigation: "Открыть навигацию", searchConcept: "Найти концепт…", searchRegistry: "Поиск по названиям, вопросам, артефактам, тегам…", clearRegistrySearch: "Очистить поиск реестра", reset: "Сбросить", matchingRows: "совпадающих строк", sortHint: "Сортировка по столбцу · Enter открывает строку", downloadSuccess: "Данные атласа скачаны", shareSheetOpened: "Открыто меню публикации", pageLinkCopied: "Ссылка на страницу скопирована", sharingCancelled: "Публикация отменена", chooseFileFirst: "Сначала выберите файл и добавьте название", artifactSaved: "Артефакт сохранён на вашей полке", uploadFailed: "Не удалось загрузить файл", artifactRemoved: "Артефакт удалён с полки", deleteFailed: "Не удалось удалить артефакт",
+    save: "Сохранить атлас", share: "Поделиться", copied: "Скопировано", language: "Язык", atlasTitle: "Атлас архитектурных моделей", heroKicker: "Визуальный путеводитель по описанию архитектуры", contents: "Содержание", interactiveNote: "Интерактивная исследовательская заметка", lastFramed: "Последняя рамка · редакция 2022", toggleNavigation: "Открыть навигацию", searchConcept: "Найти концепт…", clearSearch: "Очистить поиск", searchRegistry: "Поиск по названиям, вопросам, артефактам, тегам…", clearRegistrySearch: "Очистить поиск реестра", reset: "Сбросить", matchingRows: "совпадающих строк", sortHint: "Сортировка по столбцу · Enter открывает строку", downloadSuccess: "Данные атласа скачаны", shareSheetOpened: "Открыто меню публикации", pageLinkCopied: "Ссылка на страницу скопирована", sharingCancelled: "Публикация отменена", chooseFileFirst: "Сначала выберите файл и добавьте название", artifactSaved: "Артефакт сохранён на вашей полке", uploadFailed: "Не удалось загрузить файл", artifactRemoved: "Артефакт удалён с полки", deleteFailed: "Не удалось удалить артефакт",
     nav: { top: "Обзор", context: "Контекст", core: "Ядро модели", c4: "Линза C4", mof: "Линза MOF", mda: "MDA", togaf: "TOGAF", archimate: "ArchiMate", dragon1: "Dragon1", "model-theory": "Роли и теория", metamodel: "Метамодель", registry: "Реестр", mapping: "Сравнение", changes: "Изменения редакций", sources: "Источники", storage: "Файловое хранилище", autodev: "AutoDev" },
+    registry: { sectionEyebrow: "РЕЕСТР АРХИТЕКТУРНЫХ СПЕЦИФИКАЦИЙ", title: "Отдельная строка для каждой архитектурной линзы.", intro: "Ищите, фильтруйте и сортируйте типизированный индекс стандартов, моделей, методов, метамодельной инфраструктуры, языков моделирования и обобщённого синтеза атласа. Выберите строку, чтобы изучить полный профиль, ориентированный на метамодель.", dynamicTable: "ДИНАМИЧЕСКАЯ ТАБЛИЦА ДАННЫХ", clickToExplore: "Нажмите на строку для изучения", translationCompleteness: "ПОЛНОТА ПЕРЕВОДА", translated: "переведено", fallback: "fallback", unavailable: "недоступно", specifications: "спецификаций", fieldsTranslated: "полей переведено", relationships: "связей", tags: "ТЕГИ", exploreSpecification: "Изучить спецификацию", kindLabels: { standard: "стандарт", model: "модель", method: "метод", "modeling-language": "язык моделирования", "metamodeling-facility": "метамодельная инфраструктура" }, statusLabels: { current: "текущая", historical: "историческая", illustrative: "иллюстративная" }, searchLabel: "Поиск в реестре архитектур", type: "Тип", allTypes: "Все типы", version: "Версия", allVersions: "Все версии", tag: "Тег", allTags: "Все теги", matchingRows: "совпадающих строк", sortHint: "Сортировка по столбцу · Enter открывает строку", specification: "Спецификация", primaryQuestion: "Основной вопрос", metamodelFocus: "Фокус метамодели", noMatches: "По этим фильтрам строки реестра не найдены.", tryClearing: "Сбросьте фильтр или выполните поиск другого фреймворка, артефакта или тега.", sortBySpecification: "Сортировать по названию спецификации", sortByType: "Сортировать по типу", sortByVersion: "Сортировать по версии", sortByQuestion: "Сортировать по основному вопросу", sortByFocus: "Сортировать по фокусу метамодели", action: "Действие", profile: "ПРОФИЛЬ СПЕЦИФИКАЦИИ", abstraction: "АБСТРАКЦИЯ / МЕТАМОДЕЛЬ", primaryArtifact: "ОСНОВНОЙ АРТЕФАКТ", interoperability: "ИНТЕРОПЕРАБЕЛЬНОСТЬ / СООТВЕТСТВИЕ", customMetadata: "ПОЛЬЗОВАТЕЛЬСКИЕ МЕТАДАННЫЕ", frameworkSignals: "Сигналы, специфичные для фреймворка.", fields: "полей", metamodelMap: "МЕТАМОДЕЛЬНАЯ КАРТА ФРЕЙМВОРКОВ", howConnects: "Как связана эта линза.", selectedFramework: "ВЫБРАННЫЙ ФРЕЙМВОРК", sourceTrail: "ИСТОЧНИКИ", registryId: "ID реестра", openAtlasLens: "Открыть линзу атласа" },
+    mapping: { eyebrow: "СОПОСТАВЛЕНИЕ МОДЕЛЕЙ", title: "Семь линз. Один разговор об архитектуре.", intro: "ISO 42010 определяет, зачем описывается архитектура; C4 выбирает программный масштаб; MOF объясняет метамоделирование и обмен; TOGAF структурирует работу с архитектурой предприятия; ArchiMate даёт кросс-доменный язык моделирования; Dragon1 — словарь понятий предприятия и реализации; MDA — архитектуру преобразований.", compareBy: "Сравнивать по", artifactDesk: "СТОЛ АРТЕФАКТОВ", artifactDeskTitle: "Модель и язык, которые стоят за ней.", illustrativeExamples: "иллюстративные примеры", xmiEyebrow: "ОБЗОР ОБМЕНА XMI", xmiTitle: "От модели на одном столе к артефакту, который прочитает другой инструмент.", simplifiedFlow: "упрощённый учебный поток", xmiFoot: "XMI — представление обмена; MOF и исходная метамодель задают смысл передаваемых объектов.", headers: { iso: "Описание архитектуры", c4: "Масштаб программной архитектуры", mof: "Метамодельная инфраструктура", togaf: "Метод и управление EA", archimate: "Язык моделирования EA", dragon1: "Метамодель и язык EA", mda: "Архитектура преобразований" } },
   },
 };
